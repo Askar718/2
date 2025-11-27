@@ -13,7 +13,7 @@
 
     :root {
       --bg-main: #020617;
-      --bg-panel: rgba(15, 23, 42, 0.98);
+      --bg-panel: rgba(15, 23, 42, 0.9);
       --accent-blue: #38bdf8;
       --accent-blue-soft: rgba(56, 189, 248, 0.4);
       --accent-yellow: #facc15;
@@ -39,7 +39,7 @@
       font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: var(--text-main);
 
-      /* общий синий киберфон */
+      /* киберфон без тяжёлой картинки */
       background-color: var(--bg-main);
       background-image:
         radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.25), transparent 55%),
@@ -53,7 +53,7 @@
       overflow-x: hidden;
     }
 
-    /* лёгкая диагональная «сеточка» поверх фона */
+    /* лёгкая диагональная сетка поверх фона */
     body::before {
       content: "";
       position: fixed;
@@ -97,7 +97,7 @@
       margin: 0 auto;
     }
 
-    /* ========== NAVBAR ========== */
+    /* NAVBAR */
 
     .nav {
       position: fixed;
@@ -184,47 +184,35 @@
       cursor: pointer;
     }
 
-    /* ========== ПАНЕЛИ С ЖИВЫМ НЕОНОМ ========== */
+    /* ПАНЕЛИ С КРУТЯЩИМСЯ CONIC-GRADIENT */
 
     .panel {
       position: relative;
-      border-radius: 32px;
+      border-radius: 30px;
       padding: 32px 28px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background:
-        radial-gradient(circle at 0% 0%, rgba(15, 23, 42, 0.0), rgba(15, 23, 42, 0.88) 55%),
-        radial-gradient(circle at 100% 100%, rgba(15, 23, 42, 0.0), rgba(15, 23, 42, 0.92) 55%),
-        var(--bg-panel);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: radial-gradient(circle at top,
+        rgba(30, 64, 175, 0.7),
+        var(--bg-panel));
+      box-shadow: 0 18px 60px rgba(15, 23, 42, 0.9);
       overflow: hidden;
     }
 
-    /* ЖИВОЙ НЕОНОВЫЙ ПЕРЕЛИВ */
     .panel::before {
       content: "";
       position: absolute;
-      inset: -45%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.80), transparent 55%),
-        radial-gradient(circle at 100% 0%, rgba(236, 72, 153, 0.70), transparent 55%),
-        radial-gradient(circle at 0% 100%, rgba(250, 204, 21, 0.60), transparent 55%);
-      mix-blend-mode: screen;       /* даёт яркий неоновый блик на тёмном фоне */
-      opacity: 0.75;
-      animation: panelGlow 18s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-
-    /* НЕОНОВАЯ РАМКА */
-    .panel::after {
-      content: "";
-      position: absolute;
-      inset: 0;
+      inset: -2px;
       border-radius: 32px;
-      border: 1px solid rgba(56, 189, 248, 0.75);
-      box-shadow:
-        0 0 0 1px rgba(15, 23, 42, 0.9),
-        0 0 32px rgba(56, 189, 248, 0.6);
+      background: conic-gradient(
+        from 120deg,
+        rgba(56, 189, 248, 0.10),
+        rgba(250, 204, 21, 0.4),
+        rgba(56, 189, 248, 0.10)
+      );
+      mix-blend-mode: screen;
+      opacity: 0.8;
       pointer-events: none;
+      animation: borderGlow 9s linear infinite;
     }
 
     /* содержимое поверх перелива */
@@ -233,19 +221,9 @@
       z-index: 1;
     }
 
-    @keyframes panelGlow {
-      0% {
-        transform: translate3d(-8%, -4%, 0) scale(1.03);
-        opacity: 0.7;
-      }
-      50% {
-        transform: translate3d(10%, 8%, 0) scale(1.08);
-        opacity: 0.93;
-      }
-      100% {
-        transform: translate3d(-6%, 6%, 0) scale(1.02);
-        opacity: 0.75;
-      }
+    @keyframes borderGlow {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .panel-header-tag {
@@ -278,6 +256,7 @@
       background: linear-gradient(90deg,
         var(--accent-blue),
         var(--accent-yellow));
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
     }
 
     .text-main {
@@ -291,17 +270,11 @@
     .accent-blue { color: var(--accent-blue); }
     .accent-yellow { color: var(--accent-yellow); }
 
-    /* блоки БЕЗ анимации появления */
-    .reveal {
-      opacity: 1;
-      transform: none;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
-    }
+    /* никаких анимаций появления — блоки сразу видны */
+    .reveal { opacity: 1; transform: none; }
+    .reveal.visible { opacity: 1; transform: none; }
 
-    /* ========== HERO ========== */
+    /* HERO */
 
     #hero {
       padding-top: 104px;
@@ -318,6 +291,7 @@
     .hero-logo-big {
       width: 140px;
       margin-bottom: 16px;
+      filter: drop-shadow(0 0 16px rgba(52, 211, 153, 0.9));
     }
 
     .hero-tagline {
@@ -353,9 +327,7 @@
       letter-spacing: 0.04em;
     }
 
-    .hero-text p + p {
-      margin-top: 8px;
-    }
+    .hero-text p + p { margin-top: 8px; }
 
     .hero-actions {
       margin-top: 22px;
@@ -395,7 +367,7 @@
       text-transform: uppercase;
       letter-spacing: 0.18em;
       cursor: pointer;
-      transition: background 0.12s ease, border-color 0.12s.ease, transform 0.12s ease;
+      transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
     }
 
     .btn-ghost:hover {
@@ -405,7 +377,9 @@
     }
 
     .hero-side-card {
-      background: rgba(15, 23, 42, 0.96);
+      background: linear-gradient(145deg,
+        rgba(15, 23, 42, 0.96),
+        rgba(15, 23, 42, 0.88));
       border-radius: 20px;
       padding: 18px 18px 16px;
       border: 1px solid var(--border-soft);
@@ -414,6 +388,8 @@
       position: relative;
       overflow: hidden;
     }
+
+    .hero-side-card > * { position: relative; z-index: 1; }
 
     .hero-side-card::before {
       content: "";
@@ -426,11 +402,6 @@
       opacity: 0.75;
       animation: panelGlow 24s ease-in-out infinite alternate;
       pointer-events: none;
-    }
-
-    .hero-side-card > * {
-      position: relative;
-      z-index: 1;
     }
 
     .hero-side-label {
@@ -455,11 +426,16 @@
         rgba(148, 163, 184, 0));
     }
 
-    /* ========== COUNTDOWN ========== */
-
-    .countdown-wrapper {
-      margin-top: 24px;
+    /* анимация мягкого перелива для вспомогательных блоков */
+    @keyframes panelGlow {
+      0%   { transform: translate3d(-8%, -4%, 0) scale(1.03); opacity: 0.7; }
+      50%  { transform: translate3d(10%, 8%, 0) scale(1.08); opacity: 0.9; }
+      100% { transform: translate3d(-6%, 6%, 0) scale(1.02); opacity: 0.75; }
     }
+
+    /* COUNTDOWN */
+
+    .countdown-wrapper { margin-top: 24px; }
 
     .countdown-label {
       font-size: 0.85rem;
@@ -480,8 +456,11 @@
       padding: 8px 10px;
       border-radius: 14px;
       border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.96);
+      background: radial-gradient(circle at top,
+        rgba(56, 189, 248, 0.2),
+        rgba(15, 23, 42, 0.96));
       text-align: center;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.95);
     }
 
     .count-value {
@@ -506,7 +485,7 @@
       letter-spacing: 0.14em;
     }
 
-    /* ========== О ТУРНИРЕ / ФОРМАТ ========== */
+    /* О ТУРНИРЕ / ФОРМАТ */
 
     #about .text-main {
       font-size: 0.96rem;
@@ -528,11 +507,9 @@
       letter-spacing: 0.04em;
     }
 
-    .about-list li {
-      margin-bottom: 6px;
-    }
+    .about-list li { margin-bottom: 6px; }
 
-    /* ========== ПРАВИЛА — АККОРДИОН ========== */
+    /* ПРАВИЛА — АККОРДИОН */
 
     .rules-accordion {
       margin-top: 8px;
@@ -601,18 +578,14 @@
       color: var(--text-main);
     }
 
-    .rule-content-inner p {
-      margin-bottom: 4px;
-    }
+    .rule-content-inner p { margin-bottom: 4px; }
 
     .rule-content-inner ul {
       margin: 4px 0 8px 1.2rem;
       padding-left: 0.4rem;
     }
 
-    .rule-content-inner li {
-      margin-bottom: 3px;
-    }
+    .rule-content-inner li { margin-bottom: 3px; }
 
     .rule-item.open .rule-content {
       max-height: 900px;
@@ -622,7 +595,7 @@
       color: var(--accent-yellow);
     }
 
-    /* ========== ПРИЗЫ ========== */
+    /* ПРИЗЫ */
 
     .prizes-grid {
       display: flex;
@@ -631,36 +604,44 @@
       justify-content: center;
       align-items: stretch;
       margin-bottom: 20px;
+      margin-top: 10px;
     }
 
     .prize-card {
       flex: 1 1 260px;
       max-width: 360px;
-      border-radius: 18px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid var(--border-soft);
-      padding: 18px 16px 16px;
-      text-align: center;
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
+      border-radius: 22px;
+      background: radial-gradient(circle at top,
+        rgba(30, 64, 175, 0.9),
+        rgba(15, 23, 42, 0.98));
+      padding: 22px 20px 18px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 1);
+      border: 1px solid rgba(148, 163, 184, 0.7);
       position: relative;
       overflow: hidden;
+      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
     }
 
     .prize-card::before {
       content: "";
       position: absolute;
-      inset: -35%;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.5), transparent 60%);
-      mix-blend-mode: screen;
-      opacity: 0.9;
-      animation: panelGlow 20s ease-in-out infinite alternate;
+      inset: 0;
+      background: radial-gradient(circle at top,
+        rgba(56, 189, 248, 0.25),
+        transparent 55%);
+      opacity: 0;
+      transition: opacity 0.18s ease;
       pointer-events: none;
     }
 
-    .prize-card > * {
-      position: relative;
-      z-index: 1;
+    .prize-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(56, 189, 248, 0.9);
+      border-color: var(--accent-blue);
+    }
+
+    .prize-card:hover::before {
+      opacity: 1;
     }
 
     .prize-image {
@@ -668,6 +649,13 @@
       max-width: 80%;
       margin: 0 auto 10px auto;
       display: block;
+      filter: drop-shadow(0 0 22px rgba(56, 189, 248, 0.9));
+      transform: translateZ(0);
+      transition: transform 0.18s ease-out;
+    }
+
+    .prize-card:hover .prize-image {
+      transform: translateY(-4px) scale(1.03);
     }
 
     .prize-title {
@@ -678,13 +666,8 @@
       margin-bottom: 6px;
     }
 
-    .prize-title.yellow {
-      color: var(--accent-yellow);
-    }
-
-    .prize-title.blue {
-      color: var(--accent-blue);
-    }
+    .prize-title.yellow { color: var(--accent-yellow); }
+    .prize-title.blue   { color: var(--accent-blue); }
 
     .prize-text {
       font-size: 0.95rem;
@@ -699,9 +682,11 @@
       line-height: 1.6;
       text-transform: uppercase;
       letter-spacing: 0.04em;
+      max-width: 880px;
+      margin: 0 auto;
     }
 
-    /* ========== РЕГИСТРАЦИЯ ========== */
+    /* РЕГИСТРАЦИЯ */
 
     .signup-grid {
       display: grid;
@@ -720,14 +705,18 @@
     .signup-logo {
       width: 90px;
       margin-bottom: 10px;
+      filter: drop-shadow(0 0 16px rgba(52, 211, 153, 0.9));
     }
 
-    form {
-      width: 100%;
-    }
+    form { width: 100%; }
 
     .form-row {
       margin-bottom: 16px;
+      transition: transform 0.18s ease-out;
+    }
+
+    .form-row:focus-within {
+      transform: translateY(-2px);
     }
 
     label {
@@ -740,9 +729,7 @@
       color: #e5e7eb;
     }
 
-    label .req {
-      color: #f97373;
-    }
+    label .req { color: #f97373; }
 
     input,
     textarea {
@@ -750,7 +737,7 @@
       padding: 0.8rem 1rem;
       border-radius: 999px;
       border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(15, 23, 42, 0.82);
       color: #f9fafb;
       font-size: 0.95rem;
       outline: none;
@@ -802,29 +789,24 @@
       padding: 0.45rem 0.8rem;
     }
 
-    .form-status.visible {
-      display: inline-block;
-    }
-
+    .form-status.visible { display: inline-block; }
     .form-status.pending {
       color: #e5e7eb;
       background: rgba(148, 163, 184, 0.18);
       border: 1px solid rgba(148, 163, 184, 0.6);
     }
-
     .form-status.success {
       color: #bbf7d0;
       background: rgba(22, 163, 74, 0.22);
       border: 1px solid rgba(34, 197, 94, 0.7);
     }
-
     .form-status.error {
       color: #fecaca;
       background: rgba(248, 113, 113, 0.2);
       border: 1px solid rgba(248, 113, 113, 0.7);
     }
 
-    /* ========== FOOTER ========== */
+    /* FOOTER */
 
     footer {
       padding: 32px 16px 20px;
@@ -835,34 +817,21 @@
       border-top: 1px solid rgba(30, 64, 175, 0.7);
     }
 
-    /* ========== ADAPTIVE ========== */
+    /* ADAPTIVE */
 
     @media (max-width: 992px) {
-      .hero-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .signup-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .about-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .hero-grid { grid-template-columns: minmax(0, 1fr); }
+      .signup-grid { grid-template-columns: minmax(0, 1fr); }
+      .about-grid  { grid-template-columns: minmax(0, 1fr); }
     }
 
     @media (max-width: 768px) {
-      section {
-        padding: 80px 14px;
-      }
-
-      #hero {
-        padding-top: 96px;
-      }
+      section { padding: 80px 14px; }
+      #hero { padding-top: 96px; }
 
       .panel {
         padding: 24px 20px 22px;
-        border-radius: 26px;
+        border-radius: 24px;
       }
 
       .heading-main {
@@ -870,21 +839,11 @@
         letter-spacing: 0.14em;
       }
 
-      .hero-logo-big {
-        width: 120px;
-      }
+      .hero-logo-big { width: 120px; }
+      .hero-title    { font-size: 1.6rem; }
+      .hero-subtitle { font-size: 0.92rem; }
 
-      .hero-title {
-        font-size: 1.6rem;
-      }
-
-      .hero-subtitle {
-        font-size: 0.92rem;
-      }
-
-      .nav-title {
-        display: none;
-      }
+      .nav-title { display: none; }
 
       .nav-menu {
         position: absolute;
@@ -908,35 +867,16 @@
         pointer-events: auto;
       }
 
-      .nav-toggle {
-        display: block;
-      }
+      .nav-toggle { display: block; }
     }
 
     @media (max-width: 480px) {
-      .hero-title {
-        font-size: 1.45rem;
-      }
-
-      .hero-text {
-        font-size: 0.9rem;
-      }
-
-      .nav {
-        padding-inline: 10px;
-      }
-
-      .nav-logo {
-        width: 40px;
-      }
-
-      .count-box {
-        min-width: 60px;
-      }
-
-      .prize-card {
-        max-width: 100%;
-      }
+      .hero-title   { font-size: 1.45rem; }
+      .hero-text    { font-size: 0.9rem; }
+      .nav          { padding-inline: 10px; }
+      .nav-logo     { width: 40px; }
+      .count-box    { min-width: 60px; }
+      .prize-card   { max-width: 100%; }
     }
   </style>
 </head>
