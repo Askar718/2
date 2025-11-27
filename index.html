@@ -795,8 +795,13 @@
                 width: 44px;
             }
 
+            /* ВАЖНО: меню видно и на мобильном */
             .nav-links {
-                display: none;
+                gap: 10px;
+                font-size: 0.72rem;
+                letter-spacing: 0.12em;
+                flex-wrap: wrap;
+                justify-content: flex-end;
             }
 
             .count-box {
@@ -1134,19 +1139,24 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // reveal-анимации по скроллу
             const revealEls = document.querySelectorAll('.reveal');
 
-            const observer = new IntersectionObserver((entries, obs) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        obs.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.18 });
+            // Анимации появления: с запасным вариантом для старых браузеров
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries, obs) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            obs.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.18 });
 
-            revealEls.forEach(el => observer.observe(el));
+                revealEls.forEach(el => observer.observe(el));
+            } else {
+                // если IntersectionObserver не поддерживается — просто показываем блоки
+                revealEls.forEach(el => el.classList.add('visible'));
+            }
 
             // ОБРАТНЫЙ ОТСЧЁТ
             const cdDays = document.getElementById('cd-days');
@@ -1156,8 +1166,8 @@
             const cdNote = document.getElementById('countdown-note');
 
             if (cdDays && cdHours && cdMinutes && cdSeconds && cdNote) {
-                // >>> СЮДА МОЖНО ПОДПРАВИТЬ ДАТУ/ВРЕМЯ НАЧАЛА ТУРНИРА <<<
-                const tournamentStart = new Date("2025-12-23T10:00:00"); // локальное время браузера
+                // ДАТА/ВРЕМЯ НАЧАЛА ТУРНИРА
+                const tournamentStart = new Date("2025-12-23T10:00:00");
 
                 function updateCountdown() {
                     const now = new Date();
