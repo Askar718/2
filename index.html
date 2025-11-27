@@ -8,22 +8,18 @@
   <link rel="icon" type="image/png" href="logo.png" />
   <meta name="description" content="ITF POWER LEAGUE — официальный турнир по Mobile Legends: Bang Bang в КазНАИУ. Регистрация команд, регламент, призы." />
 
-  <!-- Шрифты -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Montserrat:wght@400;500;600;700&display=swap');
 
     :root {
       --bg-main: #020617;
-      --bg-panel: rgba(15, 23, 42, 0.96);
-      --bg-panel-soft: rgba(15, 23, 42, 0.9);
       --accent-blue: #38bdf8;
-      --accent-blue-soft: rgba(56, 189, 248, 0.35);
-      --accent-yellow: #facc15;
+      --accent-yellow: #fde047;
       --accent-orange: #fb923c;
       --accent-pink: #e879f9;
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
-      --border-soft: rgba(148, 163, 184, 0.7);
+      --panel-bg: rgba(15, 23, 42, 0.9);
     }
 
     * {
@@ -32,7 +28,9 @@
       box-sizing: border-box;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       min-height: 100vh;
@@ -43,11 +41,10 @@
       background-size: cover;
       background-position: center top;
       background-repeat: no-repeat;
-      /* без fixed, чтобы не лагало на телефонах */
       position: relative;
     }
 
-    /* лёгкий цветной оверлей */
+    /* мягкий цветной слой поверх фона */
     body::before {
       content: "";
       position: fixed;
@@ -55,15 +52,20 @@
       pointer-events: none;
       background:
         radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.25), transparent 55%),
-        radial-gradient(circle at 80% 100%, rgba(250, 204, 21, 0.2), transparent 55%);
+        radial-gradient(circle at 85% 100%, rgba(250, 204, 21, 0.22), transparent 55%);
       mix-blend-mode: screen;
       opacity: 0.7;
       z-index: -1;
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-    main { backdrop-filter: blur(1.5px); }
+    main {
+      backdrop-filter: blur(1.5px);
+    }
 
     section {
       width: 100%;
@@ -75,7 +77,7 @@
       margin: 0 auto;
     }
 
-    /* ========== NAVBAR ========== */
+    /* ===== NAVBAR ===== */
 
     .nav {
       position: fixed;
@@ -86,7 +88,7 @@
       height: 64px;
       padding: 0 16px;
       background: linear-gradient(to right,
-        rgba(15, 23, 42, 0.97),
+        rgba(15, 23, 42, 0.98),
         rgba(15, 23, 42, 0.93));
       border-bottom: 1px solid rgba(30, 64, 175, 0.9);
       display: flex;
@@ -134,7 +136,7 @@
       content: "";
       position: absolute;
       left: 0;
-      bottom: -3px;
+      bottom: -4px;
       width: 0;
       height: 2px;
       background: linear-gradient(90deg, var(--accent-blue), var(--accent-yellow));
@@ -152,7 +154,6 @@
       width: 100%;
     }
 
-    /* бургер для мобилок */
     .nav-toggle {
       display: none;
       background: none;
@@ -162,17 +163,43 @@
       cursor: pointer;
     }
 
-    /* ========== ПАНЕЛИ / КАРТОЧКИ ========== */
+    /* ===== ПАНЕЛИ + СТАРЫЙ ЭФФЕКТ ПЕРЕЛИВАНИЯ ===== */
 
     .panel {
-      background:
-        linear-gradient(135deg,
-          rgba(15, 23, 42, 0.98),
-          rgba(15, 23, 42, 0.94));
-      border-radius: 24px;
-      padding: 28px 24px 26px;
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 18px 50px rgba(15, 23, 42, 0.9);
+      position: relative;
+      background: radial-gradient(circle at top,
+                  rgba(30, 64, 175, 0.7),
+                  var(--panel-bg));
+      border-radius: 30px;
+      padding: 32px 24px 30px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      box-shadow: 0 18px 60px rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      border-radius: 32px;
+      background: conic-gradient(from 120deg,
+            rgba(56, 189, 248, 0.12),
+            rgba(250, 204, 21, 0.45),
+            rgba(56, 189, 248, 0.12));
+      mix-blend-mode: screen;
+      opacity: 0.85;
+      pointer-events: none;
+      animation: borderGlow 9s linear infinite;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes borderGlow {
+      0%   { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .panel-header-tag {
@@ -198,13 +225,11 @@
     }
 
     .divider {
-      width: 120px;
+      width: 140px;
       height: 3px;
-      margin: 18px auto 24px auto;
+      margin: 20px auto 26px auto;
       border-radius: 999px;
-      background: linear-gradient(90deg,
-        var(--accent-blue),
-        var(--accent-yellow));
+      background: linear-gradient(90deg, var(--accent-blue), var(--accent-yellow));
     }
 
     .text-main {
@@ -218,20 +243,23 @@
     .accent-blue { color: var(--accent-blue); }
     .accent-yellow { color: var(--accent-yellow); }
 
-    /* плавное появление (лёгкое) */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
-      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      transition: opacity 0.55s ease-out, transform 0.55s ease-out;
     }
+
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* ========== HERO ========== */
+    /* ===== HERO ===== */
 
-    #hero { padding-top: 104px; padding-bottom: 80px; }
+    #hero {
+      padding-top: 104px;
+      padding-bottom: 80px;
+    }
 
     .hero-grid {
       display: grid;
@@ -298,21 +326,21 @@
       background: linear-gradient(90deg, #ef4444, #f97316);
       color: #0b1120;
       cursor: pointer;
-      box-shadow: 0 12px 26px rgba(248, 113, 113, 0.85);
+      box-shadow: 0 12px 26px rgba(248, 113, 113, 0.9);
       transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 16px 34px rgba(249, 115, 22, 0.95);
+      box-shadow: 0 16px 34px rgba(249, 115, 22, 1);
       opacity: 0.96;
     }
 
     .btn-ghost {
       padding: 0.8rem 1.6rem;
       border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: var(--bg-panel-soft);
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: rgba(15, 23, 42, 0.96);
       color: #e5e7eb;
       font-size: 0.86rem;
       text-transform: uppercase;
@@ -328,10 +356,10 @@
     }
 
     .hero-side-card {
-      background: var(--bg-panel);
+      background: rgba(15, 23, 42, 0.96);
       border-radius: 20px;
       padding: 18px 18px 16px;
-      border: 1px solid var(--border-soft);
+      border: 1px solid rgba(148, 163, 184, 0.75);
       box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
       font-size: 0.9rem;
     }
@@ -358,7 +386,7 @@
         rgba(148, 163, 184, 0));
     }
 
-    /* ========== COUNTDOWN ========== */
+    /* ===== COUNTDOWN ===== */
 
     .countdown-wrapper {
       margin-top: 24px;
@@ -382,8 +410,8 @@
       min-width: 68px;
       padding: 8px 10px;
       border-radius: 14px;
-      border: 1px solid var(--border-soft);
-      background: var(--bg-panel-soft);
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: rgba(15, 23, 42, 0.96);
       text-align: center;
     }
 
@@ -409,7 +437,7 @@
       letter-spacing: 0.14em;
     }
 
-    /* ========== О ТУРНИРЕ (краткий блок) ========== */
+    /* ===== ABOUT / FORMAT ===== */
 
     #about .text-main {
       font-size: 0.96rem;
@@ -435,13 +463,13 @@
       margin-bottom: 6px;
     }
 
-    /* ========== ПРАВИЛА — АККОРДИОН ========== */
+    /* ===== RULES — ACCORDION ===== */
 
     .rules-accordion {
       margin-top: 8px;
-      border-radius: 16px;
-      border: 1px solid var(--border-soft);
-      background: var(--bg-panel-soft);
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: rgba(15, 23, 42, 0.95);
       overflow: hidden;
     }
 
@@ -486,18 +514,23 @@
     }
 
     .rule-content-inner p { margin-bottom: 4px; }
+
     .rule-content-inner ul {
       margin: 4px 0 8px 1.2rem;
       padding-left: 0.4rem;
     }
+
     .rule-content-inner li { margin-bottom: 3px; }
 
     .rule-item.open .rule-content {
-      max-height: 900px; /* достаточно для текста раздела */
+      max-height: 900px;
     }
-    .rule-item.open .rule-toggle { color: var(--accent-yellow); }
 
-    /* ========== ПРИЗЫ ========== */
+    .rule-item.open .rule-toggle {
+      color: var(--accent-yellow);
+    }
+
+    /* ===== PRIZES ===== */
 
     .prizes-grid {
       display: flex;
@@ -512,8 +545,8 @@
       flex: 1 1 260px;
       max-width: 360px;
       border-radius: 18px;
-      background: var(--bg-panel);
-      border: 1px solid var(--border-soft);
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.75);
       padding: 18px 16px 16px;
       text-align: center;
       box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
@@ -535,7 +568,7 @@
     }
 
     .prize-title.yellow { color: var(--accent-yellow); }
-    .prize-title.blue { color: var(--accent-blue); }
+    .prize-title.blue   { color: var(--accent-blue); }
 
     .prize-text {
       font-size: 0.95rem;
@@ -552,7 +585,7 @@
       letter-spacing: 0.04em;
     }
 
-    /* ========== РЕГИСТРАЦИЯ ========== */
+    /* ===== SIGNUP ===== */
 
     .signup-grid {
       display: grid;
@@ -589,8 +622,8 @@
       width: 100%;
       padding: 0.8rem 1rem;
       border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: rgba(15, 23, 42, 0.97);
       color: #f9fafb;
       font-size: 0.95rem;
       outline: none;
@@ -604,12 +637,14 @@
     }
 
     input::placeholder,
-    textarea::placeholder { color: var(--text-muted); }
+    textarea::placeholder {
+      color: var(--text-muted);
+    }
 
     input:focus,
     textarea:focus {
       border-color: var(--accent-blue);
-      box-shadow: 0 0 0 1px var(--accent-blue-soft);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
       background: #020617;
     }
 
@@ -632,7 +667,7 @@
 
     button[type="submit"]:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.95);
+      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.98);
       opacity: 0.96;
     }
 
@@ -662,28 +697,28 @@
       border: 1px solid rgba(248, 113, 113, 0.7);
     }
 
-    /* ========== FOOTER ========== */
+    /* ===== FOOTER ===== */
 
     footer {
       padding: 32px 16px 20px;
       text-align: center;
       font-size: 0.8rem;
       color: var(--text-muted);
-      background: rgba(15, 23, 42, 0.96);
+      background: rgba(15, 23, 42, 0.97);
       border-top: 1px solid rgba(30, 64, 175, 0.7);
     }
 
-    /* ========== ADAPTIVE ========== */
+    /* ===== ADAPTIVE ===== */
 
     @media (max-width: 992px) {
-      .hero-grid { grid-template-columns: minmax(0, 1fr); }
+      .hero-grid   { grid-template-columns: minmax(0, 1fr); }
       .signup-grid { grid-template-columns: minmax(0, 1fr); }
-      .about-grid { grid-template-columns: minmax(0, 1fr); }
+      .about-grid  { grid-template-columns: minmax(0, 1fr); }
     }
 
     @media (max-width: 768px) {
       section { padding: 80px 14px; }
-      #hero { padding-top: 96px; }
+      #hero  { padding-top: 96px; }
 
       .panel { padding: 24px 18px 22px; }
 
@@ -693,17 +728,18 @@
       }
 
       .hero-logo-big { width: 120px; }
-      .hero-title { font-size: 1.6rem; }
-      .hero-subtitle { font-size: 0.92rem; }
+      .hero-title     { font-size: 1.6rem; }
+      .hero-subtitle  { font-size: 0.92rem; }
 
       .nav-title { display: none; }
+
       .nav-menu {
         position: absolute;
         top: 64px;
         right: 0;
         left: 0;
         padding: 10px 16px 14px;
-        background: rgba(15, 23, 42, 0.97);
+        background: rgba(15, 23, 42, 0.98);
         border-bottom: 1px solid rgba(30, 64, 175, 0.7);
         flex-direction: column;
         gap: 10px;
@@ -712,20 +748,22 @@
         pointer-events: none;
         transition: transform 0.18s ease, opacity 0.18s ease;
       }
+
       .nav-menu.open {
         transform: translateY(0);
         opacity: 1;
         pointer-events: auto;
       }
+
       .nav-toggle { display: block; }
     }
 
     @media (max-width: 480px) {
       .hero-title { font-size: 1.45rem; }
-      .hero-text { font-size: 0.9rem; }
-      .nav { padding-inline: 10px; }
-      .nav-logo { width: 40px; }
-      .count-box { min-width: 60px; }
+      .hero-text  { font-size: 0.9rem; }
+      .nav        { padding-inline: 10px; }
+      .nav-logo   { width: 40px; }
+      .count-box  { min-width: 60px; }
       .prize-card { max-width: 100%; }
     }
   </style>
@@ -753,68 +791,69 @@
     <section id="hero">
       <div class="container">
         <div class="panel reveal">
-          <div class="hero-grid">
-            <div>
-              <img src="logo.png" alt="MLBB KazNARU" class="hero-logo-big" />
-              <div class="hero-tagline">ОФИЦИАЛЬНЫЙ УНИВЕРСИТЕТСКИЙ ТУРНИР</div>
-              <div class="hero-title">MOBILE LEGENDS: BANG BANG</div>
-              <div class="hero-subtitle">ITF POWER LEAGUE · КУБОК ИТФ · КАЗНАИУ</div>
+          <div class="panel-inner">
+            <div class="hero-grid">
+              <div>
+                <img src="logo.png" alt="MLBB KazNARU" class="hero-logo-big" />
+                <div class="hero-tagline">ОФИЦИАЛЬНЫЙ УНИВЕРСИТЕТСКИЙ ТУРНИР</div>
+                <div class="hero-title">MOBILE LEGENDS: BANG BANG</div>
+                <div class="hero-subtitle">ITF POWER LEAGUE · КУБОК ИТФ · КАЗНАИУ</div>
 
-              <div class="hero-text">
-                <p>
-                  Собери состав 5×5, займи место на арене и покажи, какая команда
-                  доминирует в MLBB на факультете инженерные технологии.
-                </p>
-                <p>
-                  Динамичные матчи, честное судейство, продуманная турнирная сетка
-                  и сильные соперники — всё как на киберспортивной сцене.
-                </p>
-              </div>
-
-              <div class="hero-actions">
-                <a href="#signup"><button class="btn-primary">ПОДАТЬ ЗАЯВКУ</button></a>
-                <a href="#prizes"><button type="button" class="btn-ghost">ПОСМОТРЕТЬ ПРИЗЫ</button></a>
-              </div>
-
-              <!-- COUNTDOWN -->
-              <div class="countdown-wrapper">
-                <div class="countdown-label">ДО НАЧАЛА ТУРНИРА:</div>
-                <div class="countdown" id="countdown">
-                  <div class="count-box">
-                    <div class="count-value" id="cd-days">00</div>
-                    <div class="count-unit">дней</div>
-                  </div>
-                  <div class="count-box">
-                    <div class="count-value" id="cd-hours">00</div>
-                    <div class="count-unit">часов</div>
-                  </div>
-                  <div class="count-box">
-                    <div class="count-value" id="cd-minutes">00</div>
-                    <div class="count-unit">минут</div>
-                  </div>
-                  <div class="count-box">
-                    <div class="count-value" id="cd-seconds">00</div>
-                    <div class="count-unit">секунд</div>
-                  </div>
+                <div class="hero-text">
+                  <p>
+                    Собери состав 5×5, займи место на арене и покажи, какая команда
+                    доминирует в MLBB на факультете инженерные технологии.
+                  </p>
+                  <p>
+                    Динамичные матчи, честное судейство, продуманная турнирная сетка
+                    и сильные соперники — всё как на большой киберспортивной сцене.
+                  </p>
                 </div>
-                <div class="countdown-note" id="countdown-note"></div>
-              </div>
-            </div>
 
-            <div class="hero-side-card">
-              <div class="hero-side-label">СТАТУС ТУРНИРА</div>
-              <div class="hero-side-value">ITF POWER LEAGUE</div>
-              <div class="hero-side-line"></div>
-              <div class="hero-side-label">ФОРМАТ</div>
-              <div class="text-main" style="font-size:0.9rem;">
-                Команды 5×5, групповой этап и плей-офф. Матчи проводятся онлайн,
-                при возможности — с офлайн зоной просмотра.
+                <div class="hero-actions">
+                  <a href="#signup"><button class="btn-primary">ПОДАТЬ ЗАЯВКУ</button></a>
+                  <a href="#prizes"><button type="button" class="btn-ghost">ПОСМОТРЕТЬ ПРИЗЫ</button></a>
+                </div>
+
+                <div class="countdown-wrapper">
+                  <div class="countdown-label">ДО НАЧАЛА ТУРНИРА:</div>
+                  <div class="countdown" id="countdown">
+                    <div class="count-box">
+                      <div class="count-value" id="cd-days">00</div>
+                      <div class="count-unit">дней</div>
+                    </div>
+                    <div class="count-box">
+                      <div class="count-value" id="cd-hours">00</div>
+                      <div class="count-unit">часов</div>
+                    </div>
+                    <div class="count-box">
+                      <div class="count-value" id="cd-minutes">00</div>
+                      <div class="count-unit">минут</div>
+                    </div>
+                    <div class="count-box">
+                      <div class="count-value" id="cd-seconds">00</div>
+                      <div class="count-unit">секунд</div>
+                    </div>
+                  </div>
+                  <div class="countdown-note" id="countdown-note"></div>
+                </div>
               </div>
-              <div class="hero-side-line"></div>
-              <div class="hero-side-label">КТО МОЖЕТ УЧАСТВОВАТЬ</div>
-              <div class="text-main" style="font-size:0.9rem;">
-                Студенты факультета инженерные технологии и приглашённые команды
-                университета КазНАИУ.
+
+              <div class="hero-side-card">
+                <div class="hero-side-label">СТАТУС ТУРНИРА</div>
+                <div class="hero-side-value">ITF POWER LEAGUE</div>
+                <div class="hero-side-line"></div>
+                <div class="hero-side-label">ФОРМАТ</div>
+                <div class="text-main" style="font-size:0.9rem;">
+                  Команды 5×5, групповой этап и плей-офф. Матчи проводятся онлайн,
+                  при возможности — с офлайн зоной просмотра.
+                </div>
+                <div class="hero-side-line"></div>
+                <div class="hero-side-label">КТО МОЖЕТ УЧАСТВОВАТЬ</div>
+                <div class="text-main" style="font-size:0.9rem;">
+                  Студенты факультета инженерные технологии и приглашённые команды
+                  университета КазНАИУ.
+                </div>
               </div>
             </div>
           </div>
@@ -822,273 +861,281 @@
       </div>
     </section>
 
-    <!-- О ТУРНИРЕ / КРАТКО О ФОРМАТЕ -->
+    <!-- ABOUT / FORMAT -->
     <section id="about">
       <div class="container">
         <div class="panel reveal">
-          <div class="panel-header-tag">OVERVIEW</div>
-          <h2 class="heading-main">ФОРМАТ ТУРНИРА</h2>
-          <div class="divider"></div>
+          <div class="panel-inner">
+            <div class="panel-header-tag">OVERVIEW</div>
+            <h2 class="heading-main">ФОРМАТ ТУРНИРА</h2>
+            <div class="divider"></div>
 
-          <div class="about-grid">
-            <div class="text-main">
-              Турнир создан для развития командной работы, стратегического мышления
-              и киберспортивной культуры в университете. Участникам гарантированы
-              честные условия, понятный регламент и прозрачная сетка.
+            <div class="about-grid">
+              <div class="text-main">
+                Турнир создан для развития командной работы, стратегического мышления
+                и киберспортивной культуры в университете. Участникам гарантированы
+                честные условия, понятный регламент и прозрачная сетка.
+              </div>
+              <ul class="about-list">
+                <li><span class="accent-blue">Дата турнира:</span> 23 декабря 2025 года</li>
+                <li><span class="accent-blue">Формат:</span> 5 основных игроков + до 2 запасных</li>
+                <li><span class="accent-blue">Этапы:</span> групповой этап BO1 → плей-офф BO3/BO5</li>
+                <li><span class="accent-blue">Платформа:</span> официальные сервера Mobile Legends: Bang Bang</li>
+                <li><span class="accent-blue">Регистрация:</span> до 15 декабря 2025 года (23:59)</li>
+              </ul>
             </div>
-            <ul class="about-list">
-              <li><span class="accent-blue">Дата турнира:</span> 23 декабря 2025 года</li>
-              <li><span class="accent-blue">Формат:</span> 5 основных игроков + до 2 запасных</li>
-              <li><span class="accent-blue">Этапы:</span> групповой этап BO1 → плей-офф BO3/BO5</li>
-              <li><span class="accent-blue">Платформа:</span> официальные сервера Mobile Legends: Bang Bang</li>
-              <li><span class="accent-blue">Регистрация:</span> до 15 декабря 2025 года (23:59)</li>
-            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ПРАВИЛА -->
+    <!-- RULES -->
     <section id="rules">
       <div class="container">
         <div class="panel reveal">
-          <div class="panel-header-tag">RULES</div>
-          <h2 class="heading-main">РЕГЛАМЕНТ ТУРНИРА</h2>
-          <div class="divider"></div>
+          <div class="panel-inner">
+            <div class="panel-header-tag">RULES</div>
+            <h2 class="heading-main">РЕГЛАМЕНТ ТУРНИРА</h2>
+            <div class="divider"></div>
 
-          <div class="rules-accordion" id="rules-accordion">
-            <!-- 1. ОБЩИЕ ПОЛОЖЕНИЯ -->
-            <div class="rule-item open">
-              <div class="rule-header">
-                <div class="rule-title">1. ОБЩИЕ ПОЛОЖЕНИЯ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>1.1.</strong> Полное название турнира: <strong>ITF POWER LEAGUE — Кубок ИТФ по Mobile Legends: Bang Bang 2025</strong>.</p>
-                  <p><strong>1.2.</strong> Организатор — <strong>Кафедра энергетики и электротехники</strong> факультета инженерные технологии (ИТФ).</p>
-                  <p><strong>1.3.</strong> Дисциплина: <strong>Mobile Legends: Bang Bang (MLBB)</strong>, актуальная версия клиента.</p>
-                  <p><strong>1.4.</strong> Формат: онлайн-турнир с возможными офлайн-зонами просмотра.</p>
-                  <p><strong>1.5.</strong> Дата основных матчей: <strong>23 декабря 2025 года</strong>. Расписание публикуется в официальном канале турнира.</p>
-                  <p><strong>1.6.</strong> Рабочий язык турнира — русский.</p>
+            <div class="rules-accordion" id="rules-accordion">
+              <!-- 1 -->
+              <div class="rule-item open">
+                <div class="rule-header">
+                  <div class="rule-title">1. ОБЩИЕ ПОЛОЖЕНИЯ</div>
+                  <div class="rule-toggle">▾</div>
+                </div>
+                <div class="rule-content">
+                  <div class="rule-content-inner">
+                    <p><strong>1.1.</strong> Полное название турнира: <strong>ITF POWER LEAGUE — Кубок ИТФ по Mobile Legends: Bang Bang 2025</strong>.</p>
+                    <p><strong>1.2.</strong> Организатор — <strong>Кафедра энергетики и электротехники</strong> факультета инженерные технологии (ИТФ).</p>
+                    <p><strong>1.3.</strong> Дисциплина: <strong>Mobile Legends: Bang Bang (MLBB)</strong>, актуальная версия клиента.</p>
+                    <p><strong>1.4.</strong> Формат: онлайн-турнир с возможными офлайн-зонами просмотра.</p>
+                    <p><strong>1.5.</strong> Дата основных матчей: <strong>23 декабря 2025 года</strong>. Расписание публикуется в официальном канале турнира.</p>
+                    <p><strong>1.6.</strong> Рабочий язык турнира — русский.</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 2. УЧАСТНИКИ -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">2. УЧАСТНИКИ И СОСТАВ КОМАНДЫ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>2.1.</strong> Состав команды: 5 основных игроков и до 2 запасных (максимум 7 человек).</p>
-                  <p><strong>2.2.</strong> К участию допускаются студенты КазНАИУ (в приоритете — студенты ИТФ). Один игрок может выступать только за одну команду.</p>
-                  <p><strong>2.3.</strong> Регистрация до <strong>15 декабря 2025 года (23:59)</strong> через онлайн-форму. В заявке указываются:</p>
-                  <ul>
-                    <li>название команды;</li>
-                    <li>ФИО, никнеймы и ID аккаунтов MLBB всех игроков (основных и запасных);</li>
-                    <li>контакты капитана (WhatsApp / Telegram).</li>
-                  </ul>
-                  <p><strong>2.4.</strong> Название команды не должно содержать оскорблений, нецензурной лексики, дискриминации и политических лозунгов. Организаторы могут потребовать изменить название.</p>
-                  <p><strong>2.5.</strong> Замены после окончания регистрации возможны только до старта стадии плей-офф и только на заранее заявленных запасных, с согласия администрации.</p>
+              <!-- 2 -->
+              <div class="rule-item">
+                <div class="rule-header">
+                  <div class="rule-title">2. УЧАСТНИКИ И СОСТАВ КОМАНДЫ</div>
+                  <div class="rule-toggle">▾</div>
+                </div>
+                <div class="rule-content">
+                  <div class="rule-content-inner">
+                    <p><strong>2.1.</strong> Состав команды: 5 основных игроков и до 2 запасных (максимум 7 человек).</p>
+                    <p><strong>2.2.</strong> К участию допускаются студенты КазНАИУ (в приоритете — студенты ИТФ). Один игрок может выступать только за одну команду.</p>
+                    <p><strong>2.3.</strong> Регистрация до <strong>15 декабря 2025 года (23:59)</strong> через онлайн-форму. В заявке указываются:</p>
+                    <ul>
+                      <li>название команды;</li>
+                      <li>ФИО, никнеймы и ID аккаунтов MLBB всех игроков (основных и запасных);</li>
+                      <li>контакты капитана (WhatsApp / Telegram).</li>
+                    </ul>
+                    <p><strong>2.4.</strong> Название команды не должно содержать оскорблений, нецензурной лексики, дискриминации и политических лозунгов. Организаторы могут потребовать изменить название.</p>
+                    <p><strong>2.5.</strong> Замены после окончания регистрации возможны только до старта стадии плей-офф и только на заранее заявленных запасных, с согласия администрации.</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 3. СТРУКТУРА ТУРНИРА -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">3. СТРУКТУРА ТУРНИРА</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>3.1. Групповой этап.</strong></p>
-                  <ul>
-                    <li>Команды делятся на группы по 4 (формат может корректироваться).</li>
-                    <li>Система — каждый с каждым (Round Robin).</li>
-                    <li>Формат матчей — BO1 (до одной победы).</li>
-                    <li>Победа — 1 очко, поражение — 0 очков.</li>
-                    <li>В плей-офф выходят 2 лучшие команды из каждой группы.</li>
-                  </ul>
-                  <p><strong>Критерии распределения мест:</strong></p>
-                  <ul>
-                    <li>общее количество очков;</li>
-                    <li>результат личной встречи между командами;</li>
-                    <li>при нескольких командах с равными показателями — мини-таблица или переигровки по решению администрации.</li>
-                  </ul>
-                  <p><strong>3.2. Плей-офф.</strong> Олимпийская система (проигравший выбывает).</p>
-                  <ul>
-                    <li>четвертьфиналы — BO3 (до 2 побед);</li>
-                    <li>полуфиналы — BO3;</li>
-                    <li>матч за 3-е место — BO3;</li>
-                    <li>гранд-финал — BO5 (до 3 побед).</li>
-                  </ul>
+              <!-- 3 -->
+              <div class="rule-item">
+                <div class="rule-header">
+                  <div class="rule-title">3. СТРУКТУРА ТУРНИРА</div>
+                  <div class="rule-toggle">▾</div>
+                </div>
+                <div class="rule-content">
+                  <div class="rule-content-inner">
+                    <p><strong>3.1. Групповой этап.</strong></p>
+                    <ul>
+                      <li>Команды делятся на группы по 4 (формат может корректироваться).</li>
+                      <li>Система — каждый с каждым (Round Robin).</li>
+                      <li>Формат матчей — BO1 (до одной победы).</li>
+                      <li>Победа — 1 очко, поражение — 0 очков.</li>
+                      <li>В плей-офф выходят 2 лучшие команды из каждой группы.</li>
+                    </ul>
+                    <p><strong>Критерии распределения мест:</strong></p>
+                    <ul>
+                      <li>общее количество очков;</li>
+                      <li>результат личной встречи между командами;</li>
+                      <li>при нескольких командах с равными показателями — мини-таблица или переигровки по решению администрации.</li>
+                    </ul>
+                    <p><strong>3.2. Плей-офф.</strong> Олимпийская система (проигравший выбывает).</p>
+                    <ul>
+                      <li>четвертьфиналы — BO3 (до 2 побед);</li>
+                      <li>полуфиналы — BO3;</li>
+                      <li>матч за 3-е место — BO3;</li>
+                      <li>гранд-финал — BO5 (до 3 побед).</li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 4. ПРОВЕДЕНИЕ МАТЧА -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">4. ПРОВЕДЕНИЕ МАТЧА</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>4.1.</strong> Все игры проходят на официальных серверах MLBB на актуальной версии клиента.</p>
-                  <p><strong>4.2.</strong> Лобби создаёт капитан команды, указанной первой в расписании (или администратор), и приглашает соперника.</p>
-                  <p><strong>4.3.</strong> Настройки комнаты: Custom → Draft Pick, стандартная карта 5×5, зрители — только администраторы/наблюдатели.</p>
-                  <p><strong>4.4.</strong> Команды обязаны убедиться, что в лобби только зарегистрированные игроки.</p>
-                  <p><strong>4.5.</strong> Драфт проводится в режиме Draft Pick. Запрещённые герои объявляются отдельно; их выбор считается нарушением.</p>
-                  <p><strong>4.6.</strong> Матч считается начатым после завершения драфта и загрузки всех игроков на карту.</p>
-                  <p><strong>4.7. Рестарт.</strong> Возможен только если:</p>
-                  <ul>
-                    <li>в первые 30 секунд произошёл массовый технический сбой (массовый дисконнект, серьёзный лаг);</li>
-                    <li>один из игроков не подключился к игре (есть скриншот/видео).</li>
-                  </ul>
-                  <p>Команда ставит паузу и связывается с администратором. Решение о рестарте принимает администрация.</p>
-                  <p><strong>4.8. Паузы.</strong> Каждая команда может использовать паузы суммарной длительностью до 5 минут за матч. Паузы допускаются по уважительной причине и согласуются с администратором.</p>
-                  <p><strong>4.9. Опоздание.</strong> Допустимое опоздание — до 10 минут. Если команда не готова выставить 5 игроков в этот срок, возможно техническое поражение.</p>
+              <!-- 4 -->
+              <div class="rule-item">
+                <div class="rule-header">
+                  <div class="rule-title">4. ПРОВЕДЕНИЕ МАТЧА</div>
+                  <div class="rule-toggle">▾</div>
+                </div>
+                <div class="rule-content">
+                  <div class="rule-content-inner">
+                    <p><strong>4.1.</strong> Все игры проходят на официальных серверах MLBB на актуальной версии клиента.</p>
+                    <p><strong>4.2.</strong> Лобби создаёт капитан команды, указанной первой в расписании (или администратор), и приглашает соперника.</p>
+                    <p><strong>4.3.</strong> Настройки комнаты: Custom → Draft Pick, стандартная карта 5×5, зрители — только администраторы/наблюдатели.</p>
+                    <p><strong>4.4.</strong> Команды обязаны убедиться, что в лобби только зарегистрированные игроки.</p>
+                    <p><strong>4.5.</strong> Драфт проводится в режиме Draft Pick. Запрещённые герои объявляются отдельно; их выбор считается нарушением.</p>
+                    <p><strong>4.6.</strong> Матч считается начатым после завершения драфта и загрузки всех игроков на карту.</p>
+                    <p><strong>4.7. Рестарт.</strong> Возможен только если:</p>
+                    <ul>
+                      <li>в первые 30 секунд произошёл массовый технический сбой (массовый дисконнект, серьёзный лаг);</li>
+                      <li>один из игроков не подключился к игре (есть скриншот/видео).</li>
+                    </ul>
+                    <p>Команда ставит паузу и связывается с администратором. Решение о рестарте принимает администрация.</p>
+                    <p><strong>4.8. Паузы.</strong> Каждая команда может использовать паузы суммарной длительностью до 5 минут за матч. Паузы допускаются по уважительной причине и согласуются с администратором.</p>
+                    <p><strong>4.9. Опоздание.</strong> Допустимое опоздание — до 10 минут. Если команда не готова выставить 5 игроков в этот срок, возможно техническое поражение.</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 5. ПОВЕДЕНИЕ -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">5. ПРАВИЛА ПОВЕДЕНИЯ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>5.1. Fair Play.</strong> Запрещены читы, скрипты, модифицированные клиенты, использование багов и любое ПО, дающее нечестное преимущество, а также договорные матчи.</p>
-                  <p><strong>5.2. Общение.</strong> Запрещены оскорбления, угрозы, токсичность, троллинг и любая форма дискриминации в игре и официальных каналах турнира.</p>
-                  <p><strong>5.3. Саботаж.</strong> Запрещены Intentional Feeding, намеренное бездействие, искусственное затягивание матча и помощь сопернику.</p>
-                  <p><strong>5.4. Санкции.</strong> Возможны: предупреждение, пересмотр результата, техническое поражение, дисквалификация игрока или команды, запрет на участие в следующих турнирах.</p>
+              <!-- 5 -->
+              <div class="rule-item">
+                <div class="rule-header">
+                  <div class="rule-title">5. ПРАВИЛА ПОВЕДЕНИЯ</div>
+                  <div class="rule-toggle">▾</div>
+                </div>
+                <div class="rule-content">
+                  <div class="rule-content-inner">
+                    <p><strong>5.1. Fair Play.</strong> Запрещены читы, скрипты, модифицированные клиенты, использование багов и любое ПО, дающее нечестное преимущество, а также договорные матчи.</p>
+                    <p><strong>5.2. Общение.</strong> Запрещены оскорбления, угрозы, токсичность, троллинг и любая форма дискриминации в игре и официальных каналах турнира.</p>
+                    <p><strong>5.3. Саботаж.</strong> Запрещены Intentional Feeding, намеренное бездействие, искусственное затягивание матча и помощь сопернику.</p>
+                    <p><strong>5.4. Санкции.</strong> Возможны: предупреждение, пересмотр результата, техническое поражение, дисквалификация игрока или команды, запрет на участие в следующих турнирах.</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 6. СПОРНЫЕ СИТУАЦИИ -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">6. СПОРЫ И СВЯЗЬ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>6.1.</strong> Спорные ситуации решаются администрацией турнира, её решение окончательно.</p>
-                  <p><strong>6.2.</strong> При подаче жалобы команда обязана предоставить доказательства: скриншоты, видеозаписи, реплеи матчей.</p>
-                  <p><strong>6.3.</strong> Единственный официальный представитель команды — капитан. Он ведёт коммуникацию с администрацией.</p>
-                  <p><strong>6.4.</strong> Официальный канал связи (Discord / Telegram) будет сообщён капитанам. Ответственность за ознакомление с объявлениями несёт капитан.</p>
+              <!-- 6 -->
+              <div class="rule-item">
+                <div class="rule-header">
+                  <div class="rule-title">6. СПОРЫ И СВЯЗЬ</div>
+                  <div class="rule-toggle">▾</div>
+                </div>
+                <div class="rule-content">
+                  <div class="rule-content-inner">
+                    <p><strong>6.1.</strong> Спорные ситуации решаются администрацией турнира, её решение окончательно.</p>
+                    <p><strong>6.2.</strong> При подаче жалобы команда обязана предоставить доказательства: скриншоты, видеозаписи, реплеи матчей.</p>
+                    <p><strong>6.3.</strong> Единственный официальный представитель команды — капитан. Он ведёт коммуникацию с администрацией.</p>
+                    <p><strong>6.4.</strong> Официальный канал связи (Discord / Telegram) будет сообщён капитанам. Ответственность за ознакомление с объявлениями несёт капитан.</p>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- 7. ЗАКЛЮЧЕНИЕ -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">7. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>7.1.</strong> Организаторы могут корректировать регламент при форс-мажоре с обязательным уведомлением капитанов.</p>
-                  <p><strong>7.2.</strong> В неописанных ситуациях решение принимает администрация турнира, руководствуясь здравым смыслом и принципами честной игры.</p>
+              <!-- 7 -->
+              <div class="rule-item">
+                <div class="rule-header">
+                  <div class="rule-title">7. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ</div>
+                  <div class="rule-toggle">▾</div>
+                </div>
+                <div class="rule-content">
+                  <div class="rule-content-inner">
+                    <p><strong>7.1.</strong> Организаторы могут корректировать регламент при форс-мажоре с обязательным уведомлением капитанов.</p>
+                    <p><strong>7.2.</strong> В неописанных ситуациях решение принимает администрация турнира, руководствуясь здравым смыслом и принципами честной игры.</p>
+                  </div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ПРИЗЫ -->
+    <!-- PRIZES -->
     <section id="prizes">
       <div class="container">
         <div class="panel reveal">
-          <div class="panel-header-tag">PRIZES</div>
-          <h2 class="heading-main">ПРИЗЫ</h2>
-          <div class="divider"></div>
+          <div class="panel-inner">
+            <div class="panel-header-tag">PRIZES</div>
+            <h2 class="heading-main">ПРИЗЫ</h2>
+            <div class="divider"></div>
 
-          <div class="prizes-grid">
-            <div class="prize-card">
-              <img src="prize1.png" alt="Кубок за 1 место" class="prize-image" />
-              <div class="prize-title yellow">ЗА 1-Е МЕСТО</div>
-              <div class="prize-text">
-                Денежный приз <span class="accent-yellow">50&nbsp;000&nbsp;₸</span>
-                и официальный статус сильнейшей команды MLBB факультета.
+            <div class="prizes-grid">
+              <div class="prize-card">
+                <img src="prize1.png" alt="Кубок за 1 место" class="prize-image" />
+                <div class="prize-title yellow">ЗА 1-Е МЕСТО</div>
+                <div class="prize-text">
+                  Денежный приз <span class="accent-yellow">50&nbsp;000&nbsp;₸</span>
+                  и официальный статус сильнейшей команды MLBB факультета.
+                </div>
+              </div>
+
+              <div class="prize-card">
+                <img src="prize2.png" alt="Награда за 2 и 3 место" class="prize-image" />
+                <div class="prize-title blue">ЗА 2-Е И 3-Е МЕСТО</div>
+                <div class="prize-text">
+                  Официальный респект от декана факультета, именные сертификаты
+                  участников и подтверждение достижений команды в турнире.
+                </div>
               </div>
             </div>
 
-            <div class="prize-card">
-              <img src="prize2.png" alt="Награда за 2 и 3 место" class="prize-image" />
-              <div class="prize-title blue">ЗА 2-Е И 3-Е МЕСТО</div>
-              <div class="prize-text">
-                Официальный респект от декана факультета, именные сертификаты
-                участников и подтверждение достижений команды в турнире.
-              </div>
+            <div class="prizes-extra">
+              Дополнительно участников ждут памятные призы, медиа-освещение результатов
+              и возможность заявить о себе в киберспортивном сообществе университета.
             </div>
-          </div>
-
-          <div class="prizes-extra">
-            Дополнительно участников ждут памятные призы, медиа-освещение результатов
-            и возможность заявить о себе в киберспортивном сообществе университета.
           </div>
         </div>
       </div>
     </section>
 
-    <!-- РЕГИСТРАЦИЯ -->
+    <!-- SIGNUP -->
     <section id="signup">
       <div class="container">
         <div class="panel reveal">
-          <div class="signup-grid">
-            <div>
-              <div class="panel-header-tag">REGISTRATION</div>
-              <h2 class="heading-main">ОСТАВИТЬ ЗАЯВКУ</h2>
-              <div class="divider"></div>
-              <div class="signup-text">
-                Форма заполняется капитаном команды. Указывайте реальные контакты
-                и корректные никнеймы игроков в MLBB. После проверки заявки
-                организаторы свяжутся с вами в мессенджере.
+          <div class="panel-inner">
+            <div class="signup-grid">
+              <div>
+                <div class="panel-header-tag">REGISTRATION</div>
+                <h2 class="heading-main">ОСТАВИТЬ ЗАЯВКУ</h2>
+                <div class="divider"></div>
+                <div class="signup-text">
+                  Форма заполняется капитаном команды. Указывайте реальные контакты
+                  и корректные никнеймы игроков в MLBB. После проверки заявки
+                  организаторы свяжутся с вами в мессенджере.
+                </div>
               </div>
-            </div>
 
-            <div>
-              <form id="mlbb-form" action="https://api.web3forms.com/submit" method="POST">
-                <!-- Web3Forms -->
-                <input type="hidden" name="access_key" value="c2bc2f04-f440-4027-b6e0-47c61fd3a914" />
-                <input type="hidden" name="subject" value="Заявка на турнир MLBB" />
-                <input type="hidden" name="from_name" value="MLBB KazNARU" />
+              <div>
+                <form id="mlbb-form" action="https://api.web3forms.com/submit" method="POST">
+                  <input type="hidden" name="access_key" value="c2bc2f04-f440-4027-b6e0-47c61fd3a914" />
+                  <input type="hidden" name="subject" value="Заявка на турнир MLBB" />
+                  <input type="hidden" name="from_name" value="MLBB KazNARU" />
 
-                <div class="form-row">
-                  <label for="captain">ФИО капитана <span class="req">(обязательно)</span></label>
-                  <input type="text" id="captain" name="captain_name" placeholder="Фамилия Имя Отчество" required />
-                </div>
+                  <div class="form-row">
+                    <label for="captain">ФИО капитана <span class="req">(обязательно)</span></label>
+                    <input type="text" id="captain" name="captain_name" placeholder="Фамилия Имя Отчество" required />
+                  </div>
 
-                <div class="form-row">
-                  <label for="contact">Номер (WhatsApp / Telegram) <span class="req">(обязательно)</span></label>
-                  <input type="text" id="contact" name="captain_contact" placeholder="+7 ... или @username" required />
-                </div>
+                  <div class="form-row">
+                    <label for="contact">Номер (WhatsApp / Telegram) <span class="req">(обязательно)</span></label>
+                    <input type="text" id="contact" name="captain_contact" placeholder="+7 ... или @username" required />
+                  </div>
 
-                <div class="form-row">
-                  <label for="team">Название команды <span class="req">(обязательно)</span></label>
-                  <input type="text" id="team" name="team_name" placeholder="Название команды" required />
-                </div>
+                  <div class="form-row">
+                    <label for="team">Название команды <span class="req">(обязательно)</span></label>
+                    <input type="text" id="team" name="team_name" placeholder="Название команды" required />
+                  </div>
 
-                <div class="form-row">
-                  <label for="players">ФИО участников <span class="req">(обязательно)</span></label>
-                  <textarea id="players" name="players"
-                    placeholder="1) ФИО, никнейм&#10;2) ФИО, никнейм&#10;3) ..." required></textarea>
-                </div>
+                  <div class="form-row">
+                    <label for="players">ФИО участников <span class="req">(обязательно)</span></label>
+                    <textarea id="players" name="players"
+                      placeholder="1) ФИО, никнейм&#10;2) ФИО, никнейм&#10;3) ..." required></textarea>
+                  </div>
 
-                <button type="submit">ОТПРАВИТЬ ЗАЯВКУ</button>
-                <div id="form-status" class="form-status"></div>
-              </form>
+                  <button type="submit">ОТПРАВИТЬ ЗАЯВКУ</button>
+                  <div id="form-status" class="form-status"></div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -1101,7 +1148,7 @@
   </footer>
 
   <script>
-    // ===== NAV toggle (мобилки) =====
+    // NAV toggle
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
 
@@ -1115,7 +1162,7 @@
       });
     });
 
-    // ===== плавное появление блоков =====
+    // Reveal
     document.addEventListener('DOMContentLoaded', () => {
       const reveals = document.querySelectorAll('.reveal');
 
@@ -1128,13 +1175,12 @@
             }
           });
         }, { threshold: 0.18 });
-
         reveals.forEach(el => observer.observe(el));
       } else {
         reveals.forEach(el => el.classList.add('visible'));
       }
 
-      // подсветка активного пункта меню
+      // active nav
       const sections = document.querySelectorAll('section[id]');
       const navLinks = navMenu.querySelectorAll('a');
 
@@ -1156,7 +1202,7 @@
       window.addEventListener('scroll', setActiveNav);
     });
 
-    // ===== COUNTDOWN =====
+    // COUNTDOWN
     const cdDays = document.getElementById('cd-days');
     const cdHours = document.getElementById('cd-hours');
     const cdMinutes = document.getElementById('cd-minutes');
@@ -1195,7 +1241,7 @@
     const timerId = setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // ===== RULES ACCORDION =====
+    // RULES accordion
     const accordion = document.getElementById('rules-accordion');
     accordion.querySelectorAll('.rule-header').forEach(header => {
       header.addEventListener('click', () => {
@@ -1206,7 +1252,7 @@
       });
     });
 
-    // ===== ОТПРАВКА ФОРМЫ (Web3Forms) =====
+    // FORM (Web3Forms)
     const form = document.getElementById('mlbb-form');
     const statusEl = document.getElementById('form-status');
 
