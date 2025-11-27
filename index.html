@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MLBB — Кубок ИТФ 2025</title>
 
   <link rel="icon" type="image/png" href="logo.png" />
+  <meta name="description" content="ITF POWER LEAGUE — официальный турнир по Mobile Legends: Bang Bang в КазНАИУ. Регистрация команд, регламент, призы." />
 
+  <!-- Шрифты -->
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Montserrat:wght@400;500;600;700&display=swap');
 
     :root {
       --bg-main: #020617;
-      --bg-panel: rgba(15, 23, 42, 0.95);
+      --bg-panel: rgba(15, 23, 42, 0.96);
       --bg-panel-soft: rgba(15, 23, 42, 0.9);
       --accent-blue: #38bdf8;
-      --accent-blue-soft: rgba(56, 189, 248, 0.3);
+      --accent-blue-soft: rgba(56, 189, 248, 0.35);
       --accent-yellow: #facc15;
       --accent-orange: #fb923c;
+      --accent-pink: #e879f9;
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
       --border-soft: rgba(148, 163, 184, 0.7);
@@ -30,42 +32,50 @@
       box-sizing: border-box;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       min-height: 100vh;
+      font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-main);
       background-color: var(--bg-main);
       background-image: url('bg-arena.jpg');
+      background-size: cover;
       background-position: center top;
       background-repeat: no-repeat;
-      background-size: cover;
-      /* без fixed — для мобильной плавности */
-      color: var(--text-main);
-      font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      /* без fixed, чтобы не лагало на телефонах */
+      position: relative;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    /* лёгкий цветной оверлей */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.25), transparent 55%),
+        radial-gradient(circle at 80% 100%, rgba(250, 204, 21, 0.2), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.7;
+      z-index: -1;
     }
 
-    main {
-      backdrop-filter: blur(2px);
-    }
+    a { color: inherit; text-decoration: none; }
+
+    main { backdrop-filter: blur(1.5px); }
 
     section {
       width: 100%;
-      padding: 80px 16px;
+      padding: 88px 16px;
     }
 
     .container {
-      max-width: 1120px;
+      max-width: 1140px;
       margin: 0 auto;
     }
 
-    /* NAVBAR */
+    /* ========== NAVBAR ========== */
 
     .nav {
       position: fixed;
@@ -73,11 +83,12 @@
       left: 0;
       right: 0;
       z-index: 50;
-      padding: 10px 16px;
+      height: 64px;
+      padding: 0 16px;
       background: linear-gradient(to right,
-          rgba(15, 23, 42, 0.96),
-          rgba(15, 23, 42, 0.9));
-      border-bottom: 1px solid rgba(30, 64, 175, 0.7);
+        rgba(15, 23, 42, 0.97),
+        rgba(15, 23, 42, 0.93));
+      border-bottom: 1px solid rgba(30, 64, 175, 0.9);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -98,29 +109,28 @@
     .nav-title {
       font-family: 'Russo One', system-ui, sans-serif;
       font-size: 0.9rem;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent-yellow);
       white-space: nowrap;
     }
 
-    .nav-links {
+    .nav-menu {
       display: flex;
-      gap: 18px;
+      align-items: center;
+      gap: 20px;
       font-size: 0.85rem;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+      letter-spacing: 0.18em;
     }
 
-    .nav-links a {
+    .nav-menu a {
       position: relative;
       padding-bottom: 2px;
       color: var(--text-muted);
     }
 
-    .nav-links a::after {
+    .nav-menu a::after {
       content: "";
       position: absolute;
       left: 0;
@@ -132,23 +142,31 @@
       transition: width 0.18s ease;
     }
 
-    .nav-links a:hover {
+    .nav-menu a:hover,
+    .nav-menu a.active {
       color: #f9fafb;
     }
 
-    .nav-links a:hover::after,
-    .nav-links a.active::after {
+    .nav-menu a:hover::after,
+    .nav-menu a.active::after {
       width: 100%;
     }
 
-    .nav-links a.active {
-      color: #f9fafb;
+    /* бургер для мобилок */
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #e5e7eb;
+      font-size: 1.3rem;
+      cursor: pointer;
     }
 
-    /* ПАНЕЛИ */
+    /* ========== ПАНЕЛИ / КАРТОЧКИ ========== */
 
     .panel {
-      background: linear-gradient(135deg,
+      background:
+        linear-gradient(135deg,
           rgba(15, 23, 42, 0.98),
           rgba(15, 23, 42, 0.94));
       border-radius: 24px;
@@ -157,27 +175,24 @@
       box-shadow: 0 18px 50px rgba(15, 23, 42, 0.9);
     }
 
-    .panel + .panel {
-      margin-top: 24px;
-    }
-
     .panel-header-tag {
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       text-transform: uppercase;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       color: var(--text-muted);
     }
 
     .heading-main {
-      margin-top: 4px;
+      margin-top: 6px;
       font-family: 'Russo One', system-ui, sans-serif;
       font-size: 2rem;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
       text-align: center;
       background: linear-gradient(90deg,
-          var(--accent-blue),
-          var(--accent-yellow));
+        var(--accent-blue),
+        var(--accent-pink),
+        var(--accent-yellow));
       -webkit-background-clip: text;
       color: transparent;
     }
@@ -185,129 +200,123 @@
     .divider {
       width: 120px;
       height: 3px;
-      margin: 16px auto 22px auto;
+      margin: 18px auto 24px auto;
       border-radius: 999px;
       background: linear-gradient(90deg,
-          var(--accent-blue),
-          var(--accent-yellow));
+        var(--accent-blue),
+        var(--accent-yellow));
     }
 
     .text-main {
       font-size: 0.96rem;
       line-height: 1.7;
-      color: #e5e7eb;
+      color: var(--text-main);
     }
 
-    .text-main strong {
-      color: #f9fafb;
-    }
+    .text-main strong { color: #f9fafb; }
 
-    /* Плавное появление без тяжёлой анимации */
+    .accent-blue { color: var(--accent-blue); }
+    .accent-yellow { color: var(--accent-yellow); }
 
+    /* плавное появление (лёгкое) */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
       transition: opacity 0.5s ease-out, transform 0.5s ease-out;
     }
-
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
 
-    /* HERO */
+    /* ========== HERO ========== */
 
-    #hero {
-      padding-top: 110px;
-      padding-bottom: 70px;
-    }
+    #hero { padding-top: 104px; padding-bottom: 80px; }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
-      gap: 24px;
+      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      gap: 26px;
       align-items: center;
     }
 
     .hero-logo-big {
-      width: 130px;
+      width: 140px;
       margin-bottom: 16px;
     }
 
     .hero-tagline {
       font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.2em;
+      font-size: 0.92rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--text-muted);
     }
 
     .hero-title {
-      margin-top: 6px;
+      margin-top: 8px;
       font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 1.8rem;
-      letter-spacing: 0.18em;
+      font-size: 1.9rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--accent-yellow);
     }
 
     .hero-subtitle {
       margin-top: 6px;
-      font-size: 1rem;
-      letter-spacing: 0.12em;
+      font-size: 1.02rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--accent-blue);
     }
 
     .hero-text {
       margin-top: 16px;
-      font-size: 0.96rem;
+      font-size: 0.95rem;
       line-height: 1.7;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
 
-    .hero-text p + p {
-      margin-top: 8px;
-    }
+    .hero-text p + p { margin-top: 8px; }
 
     .hero-actions {
-      margin-top: 20px;
+      margin-top: 22px;
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px;
     }
 
     .btn-primary {
-      padding: 0.8rem 1.6rem;
+      padding: 0.85rem 1.8rem;
       border-radius: 999px;
       border: none;
       font-family: 'Russo One', system-ui, sans-serif;
       font-size: 0.9rem;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       background: linear-gradient(90deg, #ef4444, #f97316);
       color: #0b1120;
       cursor: pointer;
-      box-shadow: 0 10px 22px rgba(248, 113, 113, 0.8);
+      box-shadow: 0 12px 26px rgba(248, 113, 113, 0.85);
       transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(249, 115, 22, 0.95);
+      box-shadow: 0 16px 34px rgba(249, 115, 22, 0.95);
       opacity: 0.96;
     }
 
     .btn-ghost {
-      padding: 0.75rem 1.4rem;
+      padding: 0.8rem 1.6rem;
       border-radius: 999px;
       border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.9);
+      background: var(--bg-panel-soft);
       color: #e5e7eb;
       font-size: 0.86rem;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
+      letter-spacing: 0.18em;
       cursor: pointer;
       transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
     }
@@ -321,9 +330,9 @@
     .hero-side-card {
       background: var(--bg-panel);
       border-radius: 20px;
-      padding: 18px 18px 14px;
+      padding: 18px 18px 16px;
       border: 1px solid var(--border-soft);
-      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.9);
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
       font-size: 0.9rem;
     }
 
@@ -341,18 +350,18 @@
     }
 
     .hero-side-line {
-      margin: 8px 0;
+      margin: 10px 0;
       height: 1px;
       background: linear-gradient(90deg,
-          rgba(148, 163, 184, 0),
-          rgba(148, 163, 184, 0.8),
-          rgba(148, 163, 184, 0));
+        rgba(148, 163, 184, 0),
+        rgba(148, 163, 184, 0.8),
+        rgba(148, 163, 184, 0));
     }
 
-    /* COUNTDOWN */
+    /* ========== COUNTDOWN ========== */
 
     .countdown-wrapper {
-      margin-top: 22px;
+      margin-top: 24px;
     }
 
     .countdown-label {
@@ -400,36 +409,95 @@
       letter-spacing: 0.14em;
     }
 
-    /* RULES */
+    /* ========== О ТУРНИРЕ (краткий блок) ========== */
 
-    #rules .text-main {
-      font-size: 0.94rem;
+    #about .text-main {
+      font-size: 0.96rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
-    #rules h3 {
-      margin-top: 14px;
-      margin-bottom: 6px;
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 1rem;
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: 18px;
+    }
+
+    .about-list {
+      margin-top: 6px;
+      list-style: none;
+      font-size: 0.94rem;
       text-transform: uppercase;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.04em;
+    }
+
+    .about-list li {
+      margin-bottom: 6px;
+    }
+
+    /* ========== ПРАВИЛА — АККОРДИОН ========== */
+
+    .rules-accordion {
+      margin-top: 8px;
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-panel-soft);
+      overflow: hidden;
+    }
+
+    .rule-item + .rule-item {
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+    }
+
+    .rule-header {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .rule-title {
+      font-family: 'Russo One', system-ui, sans-serif;
+      font-size: 0.92rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
       color: var(--accent-blue);
     }
 
-    #rules p {
-      margin-bottom: 4px;
+    .rule-toggle {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-left: 10px;
+      flex-shrink: 0;
     }
 
-    #rules ul {
+    .rule-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .rule-content-inner {
+      padding: 0 16px 12px 16px;
+      font-size: 0.94rem;
+      line-height: 1.7;
+      color: var(--text-main);
+    }
+
+    .rule-content-inner p { margin-bottom: 4px; }
+    .rule-content-inner ul {
       margin: 4px 0 8px 1.2rem;
       padding-left: 0.4rem;
     }
+    .rule-content-inner li { margin-bottom: 3px; }
 
-    #rules li {
-      margin-bottom: 4px;
+    .rule-item.open .rule-content {
+      max-height: 900px; /* достаточно для текста раздела */
     }
+    .rule-item.open .rule-toggle { color: var(--accent-yellow); }
 
-    /* PRIZES */
+    /* ========== ПРИЗЫ ========== */
 
     .prizes-grid {
       display: flex;
@@ -466,27 +534,14 @@
       margin-bottom: 6px;
     }
 
-    .prize-title.yellow {
-      color: var(--accent-yellow);
-    }
-
-    .prize-title.blue {
-      color: var(--accent-blue);
-    }
+    .prize-title.yellow { color: var(--accent-yellow); }
+    .prize-title.blue { color: var(--accent-blue); }
 
     .prize-text {
       font-size: 0.95rem;
       line-height: 1.6;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-    }
-
-    .accent-yellow {
-      color: var(--accent-yellow);
-    }
-
-    .accent-blue {
-      color: var(--accent-blue);
     }
 
     .prizes-extra {
@@ -497,7 +552,7 @@
       letter-spacing: 0.04em;
     }
 
-    /* SIGNUP */
+    /* ========== РЕГИСТРАЦИЯ ========== */
 
     .signup-grid {
       display: grid;
@@ -513,13 +568,9 @@
       letter-spacing: 0.04em;
     }
 
-    form {
-      width: 100%;
-    }
+    form { width: 100%; }
 
-    .form-row {
-      margin-bottom: 16px;
-    }
+    .form-row { margin-bottom: 16px; }
 
     label {
       display: block;
@@ -531,9 +582,7 @@
       color: #e5e7eb;
     }
 
-    label .req {
-      color: #f97373;
-    }
+    label .req { color: #f97373; }
 
     input,
     textarea {
@@ -555,9 +604,7 @@
     }
 
     input::placeholder,
-    textarea::placeholder {
-      color: var(--text-muted);
-    }
+    textarea::placeholder { color: var(--text-muted); }
 
     input:focus,
     textarea:focus {
@@ -598,106 +645,88 @@
       padding: 0.45rem 0.8rem;
     }
 
-    .form-status.visible {
-      display: inline-block;
-    }
-
+    .form-status.visible { display: inline-block; }
     .form-status.pending {
       color: #e5e7eb;
       background: rgba(148, 163, 184, 0.18);
       border: 1px solid rgba(148, 163, 184, 0.6);
     }
-
     .form-status.success {
       color: #bbf7d0;
       background: rgba(22, 163, 74, 0.22);
       border: 1px solid rgba(34, 197, 94, 0.7);
     }
-
     .form-status.error {
       color: #fecaca;
       background: rgba(248, 113, 113, 0.2);
       border: 1px solid rgba(248, 113, 113, 0.7);
     }
 
-    /* ADAPTIVE */
+    /* ========== FOOTER ========== */
+
+    footer {
+      padding: 32px 16px 20px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.96);
+      border-top: 1px solid rgba(30, 64, 175, 0.7);
+    }
+
+    /* ========== ADAPTIVE ========== */
 
     @media (max-width: 992px) {
-      .hero-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .signup-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .hero-grid { grid-template-columns: minmax(0, 1fr); }
+      .signup-grid { grid-template-columns: minmax(0, 1fr); }
+      .about-grid { grid-template-columns: minmax(0, 1fr); }
     }
 
     @media (max-width: 768px) {
-      section {
-        padding: 72px 14px;
-      }
+      section { padding: 80px 14px; }
+      #hero { padding-top: 96px; }
 
-      #hero {
-        padding-top: 100px;
-      }
-
-      .panel {
-        padding: 24px 18px 22px;
-      }
+      .panel { padding: 24px 18px 22px; }
 
       .heading-main {
-        font-size: 1.6rem;
+        font-size: 1.7rem;
         letter-spacing: 0.14em;
       }
 
-      .hero-logo-big {
-        width: 115px;
-      }
+      .hero-logo-big { width: 120px; }
+      .hero-title { font-size: 1.6rem; }
+      .hero-subtitle { font-size: 0.92rem; }
 
-      .hero-title {
-        font-size: 1.5rem;
-      }
-
-      .hero-subtitle {
-        font-size: 0.9rem;
-      }
-
-      .nav-title {
-        display: none;
-      }
-
-      .nav-links {
+      .nav-title { display: none; }
+      .nav-menu {
+        position: absolute;
+        top: 64px;
+        right: 0;
+        left: 0;
+        padding: 10px 16px 14px;
+        background: rgba(15, 23, 42, 0.97);
+        border-bottom: 1px solid rgba(30, 64, 175, 0.7);
+        flex-direction: column;
         gap: 10px;
-        font-size: 0.75rem;
-        letter-spacing: 0.12em;
+        transform: translateY(-110%);
+        opacity: 0;
+        pointer-events: none;
+        transition: transform 0.18s ease, opacity 0.18s ease;
       }
+      .nav-menu.open {
+        transform: translateY(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .nav-toggle { display: block; }
     }
 
     @media (max-width: 480px) {
-      .nav {
-        padding-inline: 10px;
-      }
-
-      .nav-logo {
-        width: 40px;
-      }
-
-      .nav-links {
-        max-width: 70%;
-        justify-content: flex-end;
-      }
-
-      .hero-title {
-        font-size: 1.4rem;
-      }
-
-      .hero-text {
-        font-size: 0.9rem;
-      }
-
-      .count-box {
-        min-width: 60px;
-      }
+      .hero-title { font-size: 1.45rem; }
+      .hero-text { font-size: 0.9rem; }
+      .nav { padding-inline: 10px; }
+      .nav-logo { width: 40px; }
+      .count-box { min-width: 60px; }
+      .prize-card { max-width: 100%; }
     }
   </style>
 </head>
@@ -709,8 +738,10 @@
       <img src="logo.png" alt="MLBB KazNARU" class="nav-logo" />
       <div class="nav-title">MLBB · КУБОК ИТФ 2025</div>
     </div>
-    <nav class="nav-links">
+    <button class="nav-toggle" id="nav-toggle" aria-label="Меню">☰</button>
+    <nav class="nav-menu" id="nav-menu">
       <a href="#hero">О ТУРНИРЕ</a>
+      <a href="#about">ФОРМАТ</a>
       <a href="#rules">ПРАВИЛА</a>
       <a href="#prizes">ПРИЗЫ</a>
       <a href="#signup">РЕГИСТРАЦИЯ</a>
@@ -727,17 +758,16 @@
               <img src="logo.png" alt="MLBB KazNARU" class="hero-logo-big" />
               <div class="hero-tagline">ОФИЦИАЛЬНЫЙ УНИВЕРСИТЕТСКИЙ ТУРНИР</div>
               <div class="hero-title">MOBILE LEGENDS: BANG BANG</div>
-              <div class="hero-subtitle">КУБОК ИТФ · КАЗНАИУ · 2025</div>
+              <div class="hero-subtitle">ITF POWER LEAGUE · КУБОК ИТФ · КАЗНАИУ</div>
 
               <div class="hero-text">
                 <p>
-                  Кафедра энергетики и электротехники КазНАИУ проводит турнир по
-                  Mobile Legends: Bang Bang 2025. Цель — развить командную работу,
-                  стратегическое мышление и цифровые компетенции студентов.
+                  Собери состав 5×5, займи место на арене и покажи, какая команда
+                  доминирует в MLBB на факультете инженерные технологии.
                 </p>
                 <p>
-                  Вас ждут динамичные матчи, продуманная турнирная сетка и
-                  честное судейство. Покажите, какая команда сильнейшая на ИТФ.
+                  Динамичные матчи, честное судейство, продуманная турнирная сетка
+                  и сильные соперники — всё как на киберспортивной сцене.
                 </p>
               </div>
 
@@ -777,12 +807,14 @@
               <div class="hero-side-line"></div>
               <div class="hero-side-label">ФОРМАТ</div>
               <div class="text-main" style="font-size:0.9rem;">
-                Команды 5×5 · групповой этап и плей-офф · игры онлайн (при возможности — LAN-зона).
+                Команды 5×5, групповой этап и плей-офф. Матчи проводятся онлайн,
+                при возможности — с офлайн зоной просмотра.
               </div>
               <div class="hero-side-line"></div>
               <div class="hero-side-label">КТО МОЖЕТ УЧАСТВОВАТЬ</div>
               <div class="text-main" style="font-size:0.9rem;">
-                Студенты факультета инженерные технологии и приглашённые команды КазНАИУ.
+                Студенты факультета инженерные технологии и приглашённые команды
+                университета КазНАИУ.
               </div>
             </div>
           </div>
@@ -790,7 +822,33 @@
       </div>
     </section>
 
-    <!-- RULES -->
+    <!-- О ТУРНИРЕ / КРАТКО О ФОРМАТЕ -->
+    <section id="about">
+      <div class="container">
+        <div class="panel reveal">
+          <div class="panel-header-tag">OVERVIEW</div>
+          <h2 class="heading-main">ФОРМАТ ТУРНИРА</h2>
+          <div class="divider"></div>
+
+          <div class="about-grid">
+            <div class="text-main">
+              Турнир создан для развития командной работы, стратегического мышления
+              и киберспортивной культуры в университете. Участникам гарантированы
+              честные условия, понятный регламент и прозрачная сетка.
+            </div>
+            <ul class="about-list">
+              <li><span class="accent-blue">Дата турнира:</span> 23 декабря 2025 года</li>
+              <li><span class="accent-blue">Формат:</span> 5 основных игроков + до 2 запасных</li>
+              <li><span class="accent-blue">Этапы:</span> групповой этап BO1 → плей-офф BO3/BO5</li>
+              <li><span class="accent-blue">Платформа:</span> официальные сервера Mobile Legends: Bang Bang</li>
+              <li><span class="accent-blue">Регистрация:</span> до 15 декабря 2025 года (23:59)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ПРАВИЛА -->
     <section id="rules">
       <div class="container">
         <div class="panel reveal">
@@ -798,114 +856,157 @@
           <h2 class="heading-main">РЕГЛАМЕНТ ТУРНИРА</h2>
           <div class="divider"></div>
 
-          <div class="text-main">
-            <h3>1. ОБЩИЕ ПОЛОЖЕНИЯ</h3>
-            <p><strong>1.1.</strong> Полное название турнира: <strong>ITF POWER LEAGUE — Кубок ИТФ по Mobile Legends:
-                Bang Bang 2025</strong>.</p>
-            <p><strong>1.2.</strong> Организатор турнира — <strong>Кафедра энергетики и электротехники</strong>
-              факультета инженерные технологии (ИТФ).</p>
-            <p><strong>1.3.</strong> Дисциплина: <strong>Mobile Legends: Bang Bang (MLBB)</strong>, актуальная версия
-              клиента игры.</p>
-            <p><strong>1.4.</strong> Формат проведения: онлайн-турнир с возможными офлайн-просмотрами/зонами.</p>
-            <p><strong>1.5.</strong> Дата основных матчей: <strong>23 декабря 2025 года</strong>. Подробное расписание
-              публикуется в официальном канале турнира.</p>
-            <p><strong>1.6.</strong> Рабочий язык общения — русский.</p>
+          <div class="rules-accordion" id="rules-accordion">
+            <!-- 1. ОБЩИЕ ПОЛОЖЕНИЯ -->
+            <div class="rule-item open">
+              <div class="rule-header">
+                <div class="rule-title">1. ОБЩИЕ ПОЛОЖЕНИЯ</div>
+                <div class="rule-toggle">▾</div>
+              </div>
+              <div class="rule-content">
+                <div class="rule-content-inner">
+                  <p><strong>1.1.</strong> Полное название турнира: <strong>ITF POWER LEAGUE — Кубок ИТФ по Mobile Legends: Bang Bang 2025</strong>.</p>
+                  <p><strong>1.2.</strong> Организатор — <strong>Кафедра энергетики и электротехники</strong> факультета инженерные технологии (ИТФ).</p>
+                  <p><strong>1.3.</strong> Дисциплина: <strong>Mobile Legends: Bang Bang (MLBB)</strong>, актуальная версия клиента.</p>
+                  <p><strong>1.4.</strong> Формат: онлайн-турнир с возможными офлайн-зонами просмотра.</p>
+                  <p><strong>1.5.</strong> Дата основных матчей: <strong>23 декабря 2025 года</strong>. Расписание публикуется в официальном канале турнира.</p>
+                  <p><strong>1.6.</strong> Рабочий язык турнира — русский.</p>
+                </div>
+              </div>
+            </div>
 
-            <h3>2. УЧАСТНИКИ И СОСТАВ КОМАНДЫ</h3>
-            <p><strong>2.1.</strong> Состав: 5 основных игроков и до 2 запасных (максимум 7 человек).</p>
-            <p><strong>2.2.</strong> К участию допускаются студенты КазНАИУ (в приоритете — студенты ИТФ). Один игрок
-              может выступать только за одну команду.</p>
-            <p><strong>2.3.</strong> Регистрация: до <strong>15 декабря 2025 года (23:59)</strong> команда подаёт
-              заявку через онлайн-форму. В заявке указываются:</p>
-            <ul>
-              <li>название команды;</li>
-              <li>ФИО, никнеймы и ID аккаунтов MLBB всех игроков (основных и запасных);</li>
-              <li>контакты капитана (WhatsApp / Telegram).</li>
-            </ul>
-            <p><strong>2.4.</strong> Название команды не должно содержать оскорблений, нецензурной лексики,
-              дискриминации или политических лозунгов. Организаторы могут потребовать заменить название.</p>
-            <p><strong>2.5.</strong> Замены после окончания регистрации возможны только до начала стадии плей-офф и
-              только на заранее заявленных запасных, с согласия администрации.</p>
+            <!-- 2. УЧАСТНИКИ -->
+            <div class="rule-item">
+              <div class="rule-header">
+                <div class="rule-title">2. УЧАСТНИКИ И СОСТАВ КОМАНДЫ</div>
+                <div class="rule-toggle">▾</div>
+              </div>
+              <div class="rule-content">
+                <div class="rule-content-inner">
+                  <p><strong>2.1.</strong> Состав команды: 5 основных игроков и до 2 запасных (максимум 7 человек).</p>
+                  <p><strong>2.2.</strong> К участию допускаются студенты КазНАИУ (в приоритете — студенты ИТФ). Один игрок может выступать только за одну команду.</p>
+                  <p><strong>2.3.</strong> Регистрация до <strong>15 декабря 2025 года (23:59)</strong> через онлайн-форму. В заявке указываются:</p>
+                  <ul>
+                    <li>название команды;</li>
+                    <li>ФИО, никнеймы и ID аккаунтов MLBB всех игроков (основных и запасных);</li>
+                    <li>контакты капитана (WhatsApp / Telegram).</li>
+                  </ul>
+                  <p><strong>2.4.</strong> Название команды не должно содержать оскорблений, нецензурной лексики, дискриминации и политических лозунгов. Организаторы могут потребовать изменить название.</p>
+                  <p><strong>2.5.</strong> Замены после окончания регистрации возможны только до старта стадии плей-офф и только на заранее заявленных запасных, с согласия администрации.</p>
+                </div>
+              </div>
+            </div>
 
-            <h3>3. СТРУКТУРА ТУРНИРА</h3>
-            <p><strong>3.1. Групповой этап.</strong></p>
-            <ul>
-              <li>Команды делятся на группы по 4 (формат может быть скорректирован по числу участников).</li>
-              <li>Система — каждый с каждым (Round Robin).</li>
-              <li>Формат матчей — BO1 (до одной победы).</li>
-              <li>Победа — 1 очко, поражение — 0 очков.</li>
-              <li>В плей-офф выходят 2 лучшие команды из каждой группы.</li>
-            </ul>
-            <p><strong>Критерии распределения мест:</strong></p>
-            <ul>
-              <li>общее количество очков;</li>
-              <li>результат личной встречи между командами с равным количеством очков;</li>
-              <li>при нескольких командах с равными показателями — мини-таблица или переигровки по решению
-                администрации.</li>
-            </ul>
+            <!-- 3. СТРУКТУРА ТУРНИРА -->
+            <div class="rule-item">
+              <div class="rule-header">
+                <div class="rule-title">3. СТРУКТУРА ТУРНИРА</div>
+                <div class="rule-toggle">▾</div>
+              </div>
+              <div class="rule-content">
+                <div class="rule-content-inner">
+                  <p><strong>3.1. Групповой этап.</strong></p>
+                  <ul>
+                    <li>Команды делятся на группы по 4 (формат может корректироваться).</li>
+                    <li>Система — каждый с каждым (Round Robin).</li>
+                    <li>Формат матчей — BO1 (до одной победы).</li>
+                    <li>Победа — 1 очко, поражение — 0 очков.</li>
+                    <li>В плей-офф выходят 2 лучшие команды из каждой группы.</li>
+                  </ul>
+                  <p><strong>Критерии распределения мест:</strong></p>
+                  <ul>
+                    <li>общее количество очков;</li>
+                    <li>результат личной встречи между командами;</li>
+                    <li>при нескольких командах с равными показателями — мини-таблица или переигровки по решению администрации.</li>
+                  </ul>
+                  <p><strong>3.2. Плей-офф.</strong> Олимпийская система (проигравший выбывает).</p>
+                  <ul>
+                    <li>четвертьфиналы — BO3 (до 2 побед);</li>
+                    <li>полуфиналы — BO3;</li>
+                    <li>матч за 3-е место — BO3;</li>
+                    <li>гранд-финал — BO5 (до 3 побед).</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
 
-            <p><strong>3.2. Плей-офф.</strong> Олимпийская система (проигравший выбывает).</p>
-            <ul>
-              <li>четвертьфиналы — BO3 (до 2 побед);</li>
-              <li>полуфиналы — BO3;</li>
-              <li>матч за 3-е место — BO3;</li>
-              <li>гранд-финал — BO5 (до 3 побед).</li>
-            </ul>
+            <!-- 4. ПРОВЕДЕНИЕ МАТЧА -->
+            <div class="rule-item">
+              <div class="rule-header">
+                <div class="rule-title">4. ПРОВЕДЕНИЕ МАТЧА</div>
+                <div class="rule-toggle">▾</div>
+              </div>
+              <div class="rule-content">
+                <div class="rule-content-inner">
+                  <p><strong>4.1.</strong> Все игры проходят на официальных серверах MLBB на актуальной версии клиента.</p>
+                  <p><strong>4.2.</strong> Лобби создаёт капитан команды, указанной первой в расписании (или администратор), и приглашает соперника.</p>
+                  <p><strong>4.3.</strong> Настройки комнаты: Custom → Draft Pick, стандартная карта 5×5, зрители — только администраторы/наблюдатели.</p>
+                  <p><strong>4.4.</strong> Команды обязаны убедиться, что в лобби только зарегистрированные игроки.</p>
+                  <p><strong>4.5.</strong> Драфт проводится в режиме Draft Pick. Запрещённые герои объявляются отдельно; их выбор считается нарушением.</p>
+                  <p><strong>4.6.</strong> Матч считается начатым после завершения драфта и загрузки всех игроков на карту.</p>
+                  <p><strong>4.7. Рестарт.</strong> Возможен только если:</p>
+                  <ul>
+                    <li>в первые 30 секунд произошёл массовый технический сбой (массовый дисконнект, серьёзный лаг);</li>
+                    <li>один из игроков не подключился к игре (есть скриншот/видео).</li>
+                  </ul>
+                  <p>Команда ставит паузу и связывается с администратором. Решение о рестарте принимает администрация.</p>
+                  <p><strong>4.8. Паузы.</strong> Каждая команда может использовать паузы суммарной длительностью до 5 минут за матч. Паузы допускаются по уважительной причине и согласуются с администратором.</p>
+                  <p><strong>4.9. Опоздание.</strong> Допустимое опоздание — до 10 минут. Если команда не готова выставить 5 игроков в этот срок, возможно техническое поражение.</p>
+                </div>
+              </div>
+            </div>
 
-            <h3>4. ПОРЯДОК ПРОВЕДЕНИЯ МАТЧА</h3>
-            <p><strong>4.1.</strong> Все игры проходят на официальных серверах MLBB на актуальной версии клиента.</p>
-            <p><strong>4.2.</strong> Лобби создаёт капитан команды, указанной в расписании первой (или администратор).
-              Он приглашает капитана и игроков команды-соперника.</p>
-            <p><strong>4.3.</strong> Настройки комнаты: Custom → Draft Pick, стандартная карта 5×5, зрители — только
-              администраторы/наблюдатели.</p>
-            <p><strong>4.4.</strong> Перед началом матча команды обязаны убедиться, что в лобби только зарегистрированные
-              игроки.</p>
-            <p><strong>4.5.</strong> Драфт проводится в режиме Draft Pick. Список запрещённых (забагованных) героев
-              публикуется отдельно; их выбор считается нарушением.</p>
-            <p><strong>4.6.</strong> Матч считается начатым после завершения драфта и загрузки всех игроков на карту.
-            </p>
-            <p><strong>4.7. Рестарт.</strong> Возможен только если:</p>
-            <ul>
-              <li>в первые 30 секунд произошёл массовый технический сбой (массовый дисконнект, серьёзный лаг);</li>
-              <li>один из игроков не подключился к игре (подтверждается скриншотом / видео).</li>
-            </ul>
-            <p>Команда ставит паузу (если возможно) и связывается с администратором. Решение о рестарте принимает
-              администрация.</p>
-            <p><strong>4.8. Паузы.</strong> Каждая команда может использовать паузы суммарной длительностью до 5 минут за
-              матч. Пауза допускается только по уважительным причинам и согласуется с администратором.</p>
-            <p><strong>4.9. Опоздание.</strong> Допустимое опоздание — до 10 минут. Если команда не может выставить 5
-              игроков в этот срок, возможно техническое поражение.</p>
+            <!-- 5. ПОВЕДЕНИЕ -->
+            <div class="rule-item">
+              <div class="rule-header">
+                <div class="rule-title">5. ПРАВИЛА ПОВЕДЕНИЯ</div>
+                <div class="rule-toggle">▾</div>
+              </div>
+              <div class="rule-content">
+                <div class="rule-content-inner">
+                  <p><strong>5.1. Fair Play.</strong> Запрещены читы, скрипты, модифицированные клиенты, использование багов и любое ПО, дающее нечестное преимущество, а также договорные матчи.</p>
+                  <p><strong>5.2. Общение.</strong> Запрещены оскорбления, угрозы, токсичность, троллинг и любая форма дискриминации в игре и официальных каналах турнира.</p>
+                  <p><strong>5.3. Саботаж.</strong> Запрещены Intentional Feeding, намеренное бездействие, искусственное затягивание матча и помощь сопернику.</p>
+                  <p><strong>5.4. Санкции.</strong> Возможны: предупреждение, пересмотр результата, техническое поражение, дисквалификация игрока или команды, запрет на участие в следующих турнирах.</p>
+                </div>
+              </div>
+            </div>
 
-            <h3>5. ПРАВИЛА ПОВЕДЕНИЯ И САНКЦИИ</h3>
-            <p><strong>5.1. Fair Play.</strong> Запрещены читы, скрипты, модифицированные клиенты, использование багов,
-              стороннее ПО, дающее преимущество, и договорные матчи.</p>
-            <p><strong>5.2. Общение.</strong> Запрещены оскорбления, токсичность, угрозы, троллинг и любая
-              дискриминация в игре и официальных каналах турнира.</p>
-            <p><strong>5.3. Саботаж.</strong> Запрещены Intentional Feeding, намеренное бездействие, искусственное
-              затягивание матча и помощь сопернику.</p>
-            <p><strong>5.4. Санкции.</strong> Возможны предупреждение, пересмотр результата, техническое поражение,
-              дисквалификация игрока/команды, отказ в участии в следующих турнирах.</p>
+            <!-- 6. СПОРНЫЕ СИТУАЦИИ -->
+            <div class="rule-item">
+              <div class="rule-header">
+                <div class="rule-title">6. СПОРЫ И СВЯЗЬ</div>
+                <div class="rule-toggle">▾</div>
+              </div>
+              <div class="rule-content">
+                <div class="rule-content-inner">
+                  <p><strong>6.1.</strong> Спорные ситуации решаются администрацией турнира, её решение окончательно.</p>
+                  <p><strong>6.2.</strong> При подаче жалобы команда обязана предоставить доказательства: скриншоты, видеозаписи, реплеи матчей.</p>
+                  <p><strong>6.3.</strong> Единственный официальный представитель команды — капитан. Он ведёт коммуникацию с администрацией.</p>
+                  <p><strong>6.4.</strong> Официальный канал связи (Discord / Telegram) будет сообщён капитанам. Ответственность за ознакомление с объявлениями несёт капитан.</p>
+                </div>
+              </div>
+            </div>
 
-            <h3>6. СПОРНЫЕ СИТУАЦИИ И СВЯЗЬ</h3>
-            <p><strong>6.1.</strong> Спорные ситуации решаются администрацией турнира, её решение окончательно.</p>
-            <p><strong>6.2.</strong> При жалобе команда предоставляет доказательства: скриншоты, видеозаписи, реплеи
-              матчей.</p>
-            <p><strong>6.3.</strong> Официальный представитель команды — капитан. Только он ведёт коммуникацию с
-              администрацией.</p>
-            <p><strong>6.4.</strong> Официальный канал связи (Discord / Telegram) сообщается капитанам. Ответственность
-              за ознакомление с объявлениями несёт капитан.</p>
-
-            <h3>7. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ</h3>
-            <p><strong>7.1.</strong> Организаторы могут корректировать регламент при форс-мажоре с обязательным
-              уведомлением капитанов.</p>
-            <p><strong>7.2.</strong> В неописанных ситуациях решение принимает администрация турнира, руководствуясь
-              здравым смыслом и принципами честной игры.</p>
+            <!-- 7. ЗАКЛЮЧЕНИЕ -->
+            <div class="rule-item">
+              <div class="rule-header">
+                <div class="rule-title">7. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ</div>
+                <div class="rule-toggle">▾</div>
+              </div>
+              <div class="rule-content">
+                <div class="rule-content-inner">
+                  <p><strong>7.1.</strong> Организаторы могут корректировать регламент при форс-мажоре с обязательным уведомлением капитанов.</p>
+                  <p><strong>7.2.</strong> В неописанных ситуациях решение принимает администрация турнира, руководствуясь здравым смыслом и принципами честной игры.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- PRIZES -->
+    <!-- ПРИЗЫ -->
     <section id="prizes">
       <div class="container">
         <div class="panel reveal">
@@ -919,28 +1020,29 @@
               <div class="prize-title yellow">ЗА 1-Е МЕСТО</div>
               <div class="prize-text">
                 Денежный приз <span class="accent-yellow">50&nbsp;000&nbsp;₸</span>
-                и статус сильнейшей команды MLBB факультета.
+                и официальный статус сильнейшей команды MLBB факультета.
               </div>
             </div>
+
             <div class="prize-card">
               <img src="prize2.png" alt="Награда за 2 и 3 место" class="prize-image" />
               <div class="prize-title blue">ЗА 2-Е И 3-Е МЕСТО</div>
               <div class="prize-text">
-                Официальный респект от декана факультета и
-                именные сертификаты участников, подтверждающие достижения команды.
+                Официальный респект от декана факультета, именные сертификаты
+                участников и подтверждение достижений команды в турнире.
               </div>
             </div>
           </div>
 
           <div class="prizes-extra">
-            Дополнительно участников ждут памятные сувениры, медиа-освещение результатов
+            Дополнительно участников ждут памятные призы, медиа-освещение результатов
             и возможность заявить о себе в киберспортивном сообществе университета.
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SIGNUP -->
+    <!-- РЕГИСТРАЦИЯ -->
     <section id="signup">
       <div class="container">
         <div class="panel reveal">
@@ -950,9 +1052,9 @@
               <h2 class="heading-main">ОСТАВИТЬ ЗАЯВКУ</h2>
               <div class="divider"></div>
               <div class="signup-text">
-                Заполните форму капитана команды. После проверки заявки организаторы
-                свяжутся с вами в WhatsApp или Telegram для подтверждения участия
-                и отправят всю актуальную информацию по турниру.
+                Форма заполняется капитаном команды. Указывайте реальные контакты
+                и корректные никнеймы игроков в MLBB. После проверки заявки
+                организаторы свяжутся с вами в мессенджере.
               </div>
             </div>
 
@@ -984,7 +1086,7 @@
                     placeholder="1) ФИО, никнейм&#10;2) ФИО, никнейм&#10;3) ..." required></textarea>
                 </div>
 
-                <button type="submit">ОТПРАВИТЬ</button>
+                <button type="submit">ОТПРАВИТЬ ЗАЯВКУ</button>
                 <div id="form-status" class="form-status"></div>
               </form>
             </div>
@@ -994,8 +1096,26 @@
     </section>
   </main>
 
+  <footer>
+    MLBB · ITF POWER LEAGUE · КазНАИУ · 2025
+  </footer>
+
   <script>
-    // Плавное появление блоков
+    // ===== NAV toggle (мобилки) =====
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.getElementById('nav-menu');
+
+    navToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+    });
+
+    navMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+      });
+    });
+
+    // ===== плавное появление блоков =====
     document.addEventListener('DOMContentLoaded', () => {
       const reveals = document.querySelectorAll('.reveal');
 
@@ -1008,14 +1128,15 @@
             }
           });
         }, { threshold: 0.18 });
+
         reveals.forEach(el => observer.observe(el));
       } else {
         reveals.forEach(el => el.classList.add('visible'));
       }
 
-      // Подсветка активного пункта меню
+      // подсветка активного пункта меню
       const sections = document.querySelectorAll('section[id]');
-      const navLinks = document.querySelectorAll('.nav-links a');
+      const navLinks = navMenu.querySelectorAll('a');
 
       function setActiveNav() {
         const scrollPos = window.scrollY + 130;
@@ -1030,55 +1151,68 @@
           link.classList.toggle('active', id === activeId);
         });
       }
+
       setActiveNav();
       window.addEventListener('scroll', setActiveNav);
-
-      // Обратный отсчёт
-      const cdDays = document.getElementById('cd-days');
-      const cdHours = document.getElementById('cd-hours');
-      const cdMinutes = document.getElementById('cd-minutes');
-      const cdSeconds = document.getElementById('cd-seconds');
-      const cdNote = document.getElementById('countdown-note');
-
-      const tournamentStart = new Date('2025-12-23T10:00:00');
-
-      function updateCountdown() {
-        const now = new Date();
-        const diff = tournamentStart - now;
-
-        if (diff <= 0) {
-          cdDays.textContent = '00';
-          cdHours.textContent = '00';
-          cdMinutes.textContent = '00';
-          cdSeconds.textContent = '00';
-          cdNote.textContent = 'ТУРНИР УЖЕ НАЧАЛСЯ!';
-          clearInterval(timerId);
-          return;
-        }
-
-        const totalSec = Math.floor(diff / 1000);
-        const days = Math.floor(totalSec / (3600 * 24));
-        const hours = Math.floor((totalSec % (3600 * 24)) / 3600);
-        const minutes = Math.floor((totalSec % 3600) / 60);
-        const seconds = totalSec % 60;
-
-        cdDays.textContent = String(days).padStart(2, '0');
-        cdHours.textContent = String(hours).padStart(2, '0');
-        cdMinutes.textContent = String(minutes).padStart(2, '0');
-        cdSeconds.textContent = String(seconds).padStart(2, '0');
-        cdNote.textContent = '';
-      }
-
-      const timerId = setInterval(updateCountdown, 1000);
-      updateCountdown();
     });
 
-    // Отправка формы через Web3Forms
+    // ===== COUNTDOWN =====
+    const cdDays = document.getElementById('cd-days');
+    const cdHours = document.getElementById('cd-hours');
+    const cdMinutes = document.getElementById('cd-minutes');
+    const cdSeconds = document.getElementById('cd-seconds');
+    const cdNote = document.getElementById('countdown-note');
+
+    const tournamentStart = new Date('2025-12-23T10:00:00');
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = tournamentStart - now;
+
+      if (diff <= 0) {
+        cdDays.textContent = '00';
+        cdHours.textContent = '00';
+        cdMinutes.textContent = '00';
+        cdSeconds.textContent = '00';
+        cdNote.textContent = 'ТУРНИР УЖЕ НАЧАЛСЯ!';
+        clearInterval(timerId);
+        return;
+      }
+
+      const totalSec = Math.floor(diff / 1000);
+      const days = Math.floor(totalSec / (3600 * 24));
+      const hours = Math.floor((totalSec % (3600 * 24)) / 3600);
+      const minutes = Math.floor((totalSec % 3600) / 60);
+      const seconds = totalSec % 60;
+
+      cdDays.textContent = String(days).padStart(2, '0');
+      cdHours.textContent = String(hours).padStart(2, '0');
+      cdMinutes.textContent = String(minutes).padStart(2, '0');
+      cdSeconds.textContent = String(seconds).padStart(2, '0');
+      cdNote.textContent = '';
+    }
+
+    const timerId = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // ===== RULES ACCORDION =====
+    const accordion = document.getElementById('rules-accordion');
+    accordion.querySelectorAll('.rule-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.parentElement;
+        const isOpen = item.classList.contains('open');
+        accordion.querySelectorAll('.rule-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    // ===== ОТПРАВКА ФОРМЫ (Web3Forms) =====
     const form = document.getElementById('mlbb-form');
     const statusEl = document.getElementById('form-status');
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
       statusEl.textContent = 'Отправляем заявку...';
       statusEl.className = 'form-status visible pending';
 
@@ -1107,5 +1241,4 @@
     });
   </script>
 </body>
-
 </html>
