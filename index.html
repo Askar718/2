@@ -40,7 +40,6 @@
       color: var(--text-main);
 
       background-color: var(--bg-main);
-      /* фоновый неоновый градиент без картинок */
       background-image:
         radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.25), transparent 55%),
         radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.22), transparent 55%),
@@ -53,7 +52,7 @@
       overflow-x: hidden;
     }
 
-    /* анимированная «сеточка» поверх фона — лёгкая, без blur */
+    /* лёгкая «сеточка» поверх фона */
     body::before {
       content: "";
       position: fixed;
@@ -184,7 +183,7 @@
       cursor: pointer;
     }
 
-    /* ========== ПАНЕЛИ С ПЕРЕЛИВОМ ========== */
+    /* ========== ПАНЕЛИ С ПЕРЕЛИВАНИЕМ ========== */
 
     .panel {
       position: relative;
@@ -193,22 +192,17 @@
       border: 1px solid var(--border-soft);
       box-shadow: 0 18px 50px rgba(15, 23, 42, 0.9);
       overflow: hidden;
-      background: var(--bg-panel);
-    }
-
-    /* тот самый эффект переливания через псевдоэлемент */
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
       background:
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.4), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.35), transparent 55%),
-        radial-gradient(circle at 0% 100%, rgba(250, 204, 21, 0.35), transparent 55%);
-      mix-blend-mode: soft-light;
-      opacity: 0.85;
-      animation: panelWave 14s ease-in-out infinite alternate;
-      pointer-events: none;
+        linear-gradient(
+          130deg,
+          rgba(56, 189, 248, 0.22),
+          rgba(236, 72, 153, 0.25),
+          rgba(250, 204, 21, 0.26),
+          rgba(56, 189, 248, 0.22)
+        ),
+        var(--bg-panel);
+      background-size: 260% 260%, auto;
+      animation: panelFlow 10s ease-in-out infinite;
     }
 
     .panel::after {
@@ -216,8 +210,10 @@
       position: absolute;
       inset: 0;
       border-radius: 24px;
-      border: 1px solid rgba(56, 189, 248, 0.45);
-      opacity: 0.45;
+      border: 1px solid rgba(56, 189, 248, 0.65);
+      box-shadow:
+        0 0 0 1px rgba(15, 23, 42, 0.9),
+        0 0 22px rgba(56, 189, 248, 0.45);
       pointer-events: none;
     }
 
@@ -226,19 +222,26 @@
       z-index: 1;
     }
 
-    @keyframes panelWave {
-      0% {
-        transform: translate3d(-10px, -6px, 0) scale(1.05);
-        opacity: 0.75;
-      }
-      50% {
-        transform: translate3d(8px, 10px, 0) scale(1.08);
-        opacity: 0.95;
-      }
-      100% {
-        transform: translate3d(-4px, 4px, 0) scale(1.03);
-        opacity: 0.8;
-      }
+    .hero-side-card,
+    .rules-accordion,
+    .prize-card {
+      background:
+        linear-gradient(
+          130deg,
+          rgba(56, 189, 248, 0.2),
+          rgba(236, 72, 153, 0.23),
+          rgba(250, 204, 21, 0.24),
+          rgba(56, 189, 248, 0.2)
+        ),
+        var(--bg-panel);
+      background-size: 260% 260%, auto;
+      animation: panelFlow 14s ease-in-out infinite;
+    }
+
+    @keyframes panelFlow {
+      0%   { background-position: 0% 50%, 0 0; }
+      50%  { background-position: 100% 50%, 0 0; }
+      100% { background-position: 0% 50%, 0 0; }
     }
 
     .panel-header-tag {
@@ -284,7 +287,7 @@
     .accent-blue { color: var(--accent-blue); }
     .accent-yellow { color: var(--accent-yellow); }
 
-    /* отключаем всплывающее появление — блоки сразу видимые */
+    /* блоки появляются без анимации */
     .reveal {
       opacity: 1;
       transform: none;
@@ -398,7 +401,6 @@
     }
 
     .hero-side-card {
-      background: rgba(15, 23, 42, 0.96);
       border-radius: 20px;
       padding: 18px 18px 16px;
       border: 1px solid var(--border-soft);
@@ -406,24 +408,6 @@
       font-size: 0.9rem;
       position: relative;
       overflow: hidden;
-    }
-
-    .hero-side-card::before {
-      content: "";
-      position: absolute;
-      inset: -35%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.35), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.3), transparent 55%);
-      mix-blend-mode: soft-light;
-      opacity: 0.75;
-      animation: panelWave 22s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-
-    .hero-side-card > * {
-      position: relative;
-      z-index: 1;
     }
 
     .hero-side-label {
@@ -531,22 +515,8 @@
       margin-top: 8px;
       border-radius: 16px;
       border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.96);
       overflow: hidden;
       position: relative;
-    }
-
-    .rules-accordion::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.35), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.3), transparent 55%);
-      mix-blend-mode: soft-light;
-      opacity: 0.75;
-      animation: panelWave 26s ease-in-out infinite alternate;
-      pointer-events: none;
     }
 
     .rules-accordion > * {
@@ -630,30 +600,12 @@
       flex: 1 1 260px;
       max-width: 360px;
       border-radius: 18px;
-      background: rgba(15, 23, 42, 0.96);
       border: 1px solid var(--border-soft);
       padding: 18px 16px 16px;
       text-align: center;
       box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
       position: relative;
       overflow: hidden;
-    }
-
-    .prize-card::before {
-      content: "";
-      position: absolute;
-      inset: -35%;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.4), transparent 60%);
-      mix-blend-mode: soft-light;
-      opacity: 0.9;
-      animation: panelWave 20s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-
-    .prize-card > * {
-      position: relative;
-      z-index: 1;
     }
 
     .prize-image {
@@ -707,7 +659,7 @@
       font-size: 0.95rem;
       line-height: 1.7;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.04ем;
     }
 
     .signup-logo {
@@ -1256,8 +1208,8 @@
               <div class="divider"></div>
               <div class="signup-text">
                 Форма заполняется капитаном команды. Указывайте реальные контакты
-                и корректные никнеймы игроков в MLBB. После проверки заявки
-                организаторы свяжутся с вами в мессенджере.
+                и корректные данные. После проверки заявки организаторы свяжутся
+                с вами в мессенджере.
               </div>
             </div>
 
@@ -1269,18 +1221,18 @@
                 <input type="hidden" name="from_name" value="MLBB KazNARU" />
 
                 <div class="form-row">
-                  <label for="captain">ФИО капитана <span class="req">(обязательно)</span></label>
-                  <input type="text" id="captain" name="captain_name" required />
-                </div>
-
-                <div class="form-row">
-                  <label for="contact">Номер (WhatsApp / Telegram) <span class="req">(обязательно)</span></label>
-                  <input type="text" id="contact" name="captain_contact" required />
-                </div>
-
-                <div class="form-row">
                   <label for="team">Название команды <span class="req">(обязательно)</span></label>
                   <input type="text" id="team" name="team_name" required />
+                </div>
+
+                <div class="form-row">
+                  <label for="group">Группа / Кафедра <span class="req">(обязательно)</span></label>
+                  <input type="text" id="group" name="group" required />
+                </div>
+
+                <div class="form-row">
+                  <label for="contact">Контакты капитана (WhatsApp / Telegram) <span class="req">(обязательно)</span></label>
+                  <input type="text" id="contact" name="captain_contact" required />
                 </div>
 
                 <div class="form-row">
@@ -1317,7 +1269,7 @@
       });
     });
 
-    // активный пункт меню по скроллу (оставляем, всплытия уже нет)
+    // активный пункт меню по скроллу
     document.addEventListener('DOMContentLoaded', () => {
       const sections = document.querySelectorAll('section[id]');
       const navLinks = navMenu.querySelectorAll('a');
