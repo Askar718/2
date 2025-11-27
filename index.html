@@ -5,6 +5,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MLBB — Кубок ИТФ 2025</title>
+
+    <!-- Иконка вкладки -->
+    <link rel="icon" type="image/png" href="logo.png" />
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Montserrat:wght@400;500;600;700&display=swap');
 
@@ -363,6 +367,59 @@
             margin: 6px 0;
         }
 
+        /* COUNTDOWN */
+
+        .countdown-wrapper {
+            margin-top: 26px;
+        }
+
+        .countdown-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: #9ca3af;
+        }
+
+        .countdown {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .count-box {
+            min-width: 72px;
+            padding: 10px 12px 8px;
+            border-radius: 16px;
+            border: 1px solid rgba(148, 163, 184, 0.8);
+            background: radial-gradient(circle at top, rgba(56, 189, 248, 0.2), rgba(15, 23, 42, 0.95));
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.95);
+            text-align: center;
+        }
+
+        .count-value {
+            font-family: 'Russo One', system-ui, sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.08em;
+            color: var(--accent-yellow);
+        }
+
+        .count-unit {
+            margin-top: 2px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #e5e7eb;
+        }
+
+        .countdown-note {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+        }
+
         /* PRIZES SECTION */
 
         #prizes {
@@ -475,7 +532,7 @@
             color: var(--accent-blue);
         }
 
-        /* FORM SECTION */
+        /* FORM + RULES SECTION */
 
         #signup {
             padding-top: 72px;
@@ -741,6 +798,10 @@
             .nav-links {
                 display: none;
             }
+
+            .count-box {
+                min-width: 64px;
+            }
         }
     </style>
 </head>
@@ -788,6 +849,30 @@
                             <div class="hero-actions">
                                 <a href="#signup"><button class="btn-primary">Подать заявку</button></a>
                                 <a href="#prizes"><button type="button" class="btn-ghost">Посмотреть призы</button></a>
+                            </div>
+
+                            <!-- COUNTDOWN -->
+                            <div class="countdown-wrapper">
+                                <div class="countdown-label">До начала турнира осталось:</div>
+                                <div class="countdown" id="countdown">
+                                    <div class="count-box">
+                                        <div class="count-value" id="cd-days">00</div>
+                                        <div class="count-unit">дней</div>
+                                    </div>
+                                    <div class="count-box">
+                                        <div class="count-value" id="cd-hours">00</div>
+                                        <div class="count-unit">часов</div>
+                                    </div>
+                                    <div class="count-box">
+                                        <div class="count-value" id="cd-minutes">00</div>
+                                        <div class="count-unit">минут</div>
+                                    </div>
+                                    <div class="count-box">
+                                        <div class="count-value" id="cd-seconds">00</div>
+                                        <div class="count-unit">секунд</div>
+                                    </div>
+                                </div>
+                                <div class="countdown-note" id="countdown-note"></div>
                             </div>
                         </div>
 
@@ -1048,8 +1133,8 @@
     </main>
 
     <script>
-        // reveal-анимации по скроллу
         document.addEventListener('DOMContentLoaded', () => {
+            // reveal-анимации по скроллу
             const revealEls = document.querySelectorAll('.reveal');
 
             const observer = new IntersectionObserver((entries, obs) => {
@@ -1062,6 +1147,48 @@
             }, { threshold: 0.18 });
 
             revealEls.forEach(el => observer.observe(el));
+
+            // ОБРАТНЫЙ ОТСЧЁТ
+            const cdDays = document.getElementById('cd-days');
+            const cdHours = document.getElementById('cd-hours');
+            const cdMinutes = document.getElementById('cd-minutes');
+            const cdSeconds = document.getElementById('cd-seconds');
+            const cdNote = document.getElementById('countdown-note');
+
+            if (cdDays && cdHours && cdMinutes && cdSeconds && cdNote) {
+                // >>> СЮДА МОЖНО ПОДПРАВИТЬ ДАТУ/ВРЕМЯ НАЧАЛА ТУРНИРА <<<
+                const tournamentStart = new Date("2025-12-23T10:00:00"); // локальное время браузера
+
+                function updateCountdown() {
+                    const now = new Date();
+                    const diff = tournamentStart - now;
+
+                    if (diff <= 0) {
+                        cdDays.textContent = "00";
+                        cdHours.textContent = "00";
+                        cdMinutes.textContent = "00";
+                        cdSeconds.textContent = "00";
+                        cdNote.textContent = "Турнир уже начался!";
+                        clearInterval(timerId);
+                        return;
+                    }
+
+                    const totalSeconds = Math.floor(diff / 1000);
+                    const days = Math.floor(totalSeconds / (3600 * 24));
+                    const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+                    const minutes = Math.floor((totalSeconds % 3600) / 60);
+                    const seconds = totalSeconds % 60;
+
+                    cdDays.textContent = String(days).padStart(2, '0');
+                    cdHours.textContent = String(hours).padStart(2, '0');
+                    cdMinutes.textContent = String(minutes).padStart(2, '0');
+                    cdSeconds.textContent = String(seconds).padStart(2, '0');
+                    cdNote.textContent = "";
+                }
+
+                const timerId = setInterval(updateCountdown, 1000);
+                updateCountdown();
+            }
         });
 
         // отправка формы через Web3Forms
