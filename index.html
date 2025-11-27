@@ -196,7 +196,7 @@
       background: var(--bg-panel);
     }
 
-    /* тот самый «старый» эффект переливания через псевдоэлемент */
+    /* тот самый эффект переливания через псевдоэлемент */
     .panel::before {
       content: "";
       position: absolute;
@@ -284,16 +284,14 @@
     .accent-blue { color: var(--accent-blue); }
     .accent-yellow { color: var(--accent-yellow); }
 
-    /* лёгкая анимация появления */
+    /* отключаем всплывающее появление — блоки сразу видимые */
     .reveal {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      opacity: 1;
+      transform: none;
     }
-
     .reveal.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: none;
     }
 
     /* ========== HERO ========== */
@@ -931,15 +929,6 @@
       .prize-card {
         max-width: 100%;
       }
-
-      /* отключаем анимации переливов, чтобы совсем не грузить слабые телефоны */
-      .panel::before,
-      .hero-side-card::before,
-      .rules-accordion::before,
-      .prize-card::before,
-      body::before {
-        animation: none;
-      }
     }
   </style>
 </head>
@@ -1328,25 +1317,8 @@
       });
     });
 
-    // плавное появление + активный пункт меню
+    // активный пункт меню по скроллу (оставляем, всплытия уже нет)
     document.addEventListener('DOMContentLoaded', () => {
-      const reveals = document.querySelectorAll('.reveal');
-
-      if ('IntersectionObserver' in window) {
-        const observer = new IntersectionObserver((entries, obs) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              obs.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.18 });
-
-        reveals.forEach(el => observer.observe(el));
-      } else {
-        reveals.forEach(el => el.classList.add('visible'));
-      }
-
       const sections = document.querySelectorAll('section[id]');
       const navLinks = navMenu.querySelectorAll('a');
 
