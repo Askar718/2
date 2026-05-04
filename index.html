@@ -1,1377 +1,2820 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="kk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MLBB — Кубок ИТФ 2025</title>
-
-  <link rel="icon" type="image/png" href="logo.png" />
-  <meta name="description" content="ITF POWER LEAGUE — официальный турнир по Mobile Legends: Bang Bang в КазНАИУ. Регистрация команд, регламент, призы." />
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Montserrat:wght@400;500;600;700&display=swap');
-
-    :root {
-      --bg-main: #020617;
-      --bg-panel: rgba(15, 23, 42, 0.9);
-      --accent-blue: #38bdf8;
-      --accent-blue-soft: rgba(56, 189, 248, 0.4);
-      --accent-yellow: #facc15;
-      --accent-orange: #fb923c;
-      --accent-pink: #e879f9;
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --border-soft: rgba(148, 163, 184, 0.7);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      font-family: 'Montserrat', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text-main);
-
-      /* киберфон без тяжёлой картинки */
-      background-color: var(--bg-main);
-      background-image:
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.25), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.22), transparent 55%),
-        radial-gradient(circle at 0% 100%, rgba(59, 130, 246, 0.26), transparent 55%),
-        linear-gradient(145deg, #020617 0%, #020617 35%, #020b25 70%, #020617 100%);
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-attachment: scroll;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* лёгкая диагональная сетка поверх фона */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: -40px;
-      pointer-events: none;
-      background:
-        repeating-linear-gradient(
-          120deg,
-          rgba(15, 23, 42, 0.7) 0px,
-          rgba(15, 23, 42, 0.7) 1px,
-          transparent 1px,
-          transparent 18px
-        );
-      mix-blend-mode: soft-light;
-      opacity: 0.55;
-      animation: gridShift 30s linear infinite;
-      z-index: -1;
-    }
-
-    @keyframes gridShift {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(140px); }
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    main {
-      backdrop-filter: blur(1.5px);
-    }
-
-    section {
-      width: 100%;
-      padding: 88px 16px;
-    }
-
-    .container {
-      max-width: 1140px;
-      margin: 0 auto;
-    }
-
-    /* NAVBAR */
-
-    .nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
-      height: 64px;
-      padding: 0 16px;
-      background:
-        linear-gradient(to right,
-          rgba(15, 23, 42, 0.97),
-          rgba(15, 23, 42, 0.93));
-      border-bottom: 1px solid rgba(30, 64, 175, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .nav-logo {
-      width: 46px;
-      flex-shrink: 0;
-    }
-
-    .nav-title {
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent-yellow);
-      white-space: nowrap;
-    }
-
-    .nav-menu {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-    }
-
-    .nav-menu a {
-      position: relative;
-      padding-bottom: 2px;
-      color: var(--text-muted);
-    }
-
-    .nav-menu a::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -3px;
-      width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent-blue), var(--accent-yellow));
-      border-radius: 999px;
-      transition: width 0.18s ease;
-    }
-
-    .nav-menu a:hover,
-    .nav-menu a.active {
-      color: #f9fafb;
-    }
-
-    .nav-menu a:hover::after,
-    .nav-menu a.active::after {
-      width: 100%;
-    }
-
-    .nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      color: #e5e7eb;
-      font-size: 1.3rem;
-      cursor: pointer;
-    }
-
-    /* ПАНЕЛИ С КРУТЯЩИМСЯ CONIC-GRADIENT */
-
-    .panel {
-      position: relative;
-      border-radius: 30px;
-      padding: 32px 28px;
-      border: 1px solid rgba(148, 163, 184, 0.75);
-      background: radial-gradient(circle at top,
-        rgba(30, 64, 175, 0.7),
-        var(--bg-panel));
-      box-shadow: 0 18px 60px rgba(15, 23, 42, 0.9);
-      overflow: hidden;
-    }
-
-    .panel::before {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      border-radius: 32px;
-      background: conic-gradient(
-        from 120deg,
-        rgba(56, 189, 248, 0.10),
-        rgba(250, 204, 21, 0.4),
-        rgba(56, 189, 248, 0.10)
-      );
-      mix-blend-mode: screen;
-      opacity: 0.8;
-      pointer-events: none;
-      animation: borderGlow 9s linear infinite;
-    }
-
-    /* содержимое поверх перелива */
-    .panel > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    @keyframes borderGlow {
-      0%   { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .panel-header-tag {
-      font-size: 0.86rem;
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-      color: var(--text-muted);
-    }
-
-    .heading-main {
-      margin-top: 6px;
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 2rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      text-align: center;
-      background: linear-gradient(90deg,
-        var(--accent-blue),
-        var(--accent-pink),
-        var(--accent-yellow));
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .divider {
-      width: 120px;
-      height: 3px;
-      margin: 18px auto 24px auto;
-      border-radius: 999px;
-      background: linear-gradient(90deg,
-        var(--accent-blue),
-        var(--accent-yellow));
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
-    }
-
-    .text-main {
-      font-size: 0.96rem;
-      line-height: 1.7;
-      color: var(--text-main);
-    }
-
-    .text-main strong { color: #f9fafb; }
-
-    .accent-blue { color: var(--accent-blue); }
-    .accent-yellow { color: var(--accent-yellow); }
-
-    /* никаких анимаций появления — блоки сразу видны */
-    .reveal { opacity: 1; transform: none; }
-    .reveal.visible { opacity: 1; transform: none; }
-
-    /* HERO */
-
-    #hero {
-      padding-top: 104px;
-      padding-bottom: 80px;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-      gap: 26px;
-      align-items: center;
-    }
-
-    .hero-logo-big {
-      width: 140px;
-      margin-bottom: 16px;
-      filter: drop-shadow(0 0 16px rgba(52, 211, 153, 0.9));
-    }
-
-    .hero-tagline {
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 0.92rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    .hero-title {
-      margin-top: 8px;
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 1.9rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent-yellow);
-    }
-
-    .hero-subtitle {
-      margin-top: 6px;
-      font-size: 1.02rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent-blue);
-    }
-
-    .hero-text {
-      margin-top: 16px;
-      font-size: 0.95rem;
-      line-height: 1.7;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .hero-text p + p { margin-top: 8px; }
-
-    .hero-actions {
-      margin-top: 22px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .btn-primary {
-      padding: 0.85rem 1.8rem;
-      border-radius: 999px;
-      border: none;
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 0.9rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, #ef4444, #f97316);
-      color: #0b1120;
-      cursor: pointer;
-      box-shadow: 0 12px 26px rgba(248, 113, 113, 0.85);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 16px 34px rgba(249, 115, 22, 0.95);
-      opacity: 0.96;
-    }
-
-    .btn-ghost {
-      padding: 0.8rem 1.6rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
-      font-size: 0.86rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      cursor: pointer;
-      transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
-    }
-
-    .btn-ghost:hover {
-      background: rgba(15, 23, 42, 0.98);
-      border-color: var(--accent-blue);
-      transform: translateY(-1px);
-    }
-
-    .hero-side-card {
-      background: linear-gradient(145deg,
-        rgba(15, 23, 42, 0.96),
-        rgba(15, 23, 42, 0.88));
-      border-radius: 20px;
-      padding: 18px 18px 16px;
-      border: 1px solid var(--border-soft);
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
-      font-size: 0.9rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-side-card > * { position: relative; z-index: 1; }
-
-    .hero-side-card::before {
-      content: "";
-      position: absolute;
-      inset: -35%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.35), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.3), transparent 55%);
-      mix-blend-mode: screen;
-      opacity: 0.75;
-      animation: panelGlow 24s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-
-    .hero-side-label {
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .hero-side-value {
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 1.15rem;
-      color: var(--accent-blue);
-    }
-
-    .hero-side-line {
-      margin: 10px 0;
-      height: 1px;
-      background: linear-gradient(90deg,
-        rgba(148, 163, 184, 0),
-        rgba(148, 163, 184, 0.8),
-        rgba(148, 163, 184, 0));
-    }
-
-    /* анимация мягкого перелива для вспомогательных блоков */
-    @keyframes panelGlow {
-      0%   { transform: translate3d(-8%, -4%, 0) scale(1.03); opacity: 0.7; }
-      50%  { transform: translate3d(10%, 8%, 0) scale(1.08); opacity: 0.9; }
-      100% { transform: translate3d(-6%, 6%, 0) scale(1.02); opacity: 0.75; }
-    }
-
-    /* COUNTDOWN */
-
-    .countdown-wrapper { margin-top: 24px; }
-
-    .countdown-label {
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--text-muted);
-    }
-
-    .countdown {
-      margin-top: 8px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .count-box {
-      min-width: 68px;
-      padding: 8px 10px;
-      border-radius: 14px;
-      border: 1px solid var(--border-soft);
-      background: radial-gradient(circle at top,
-        rgba(56, 189, 248, 0.2),
-        rgba(15, 23, 42, 0.96));
-      text-align: center;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.95);
-    }
-
-    .count-value {
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 1.2rem;
-      color: var(--accent-yellow);
-    }
-
-    .count-unit {
-      margin-top: 2px;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: #e5e7eb;
-    }
-
-    .countdown-note {
-      margin-top: 6px;
-      font-size: 0.85rem;
-      color: var(--accent-blue);
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-    }
-
-    /* О ТУРНИРЕ / ФОРМАТ */
-
-    #about .text-main {
-      font-size: 0.96rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-      gap: 18px;
-    }
-
-    .about-list {
-      margin-top: 6px;
-      list-style: none;
-      font-size: 0.94rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .about-list li { margin-bottom: 6px; }
-
-    /* ПРАВИЛА — АККОРДИОН */
-
-    .rules-accordion {
-      margin-top: 8px;
-      border-radius: 16px;
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.96);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .rules-accordion::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.35), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(250, 204, 21, 0.3), transparent 55%);
-      mix-blend-mode: screen;
-      opacity: 0.8;
-      animation: panelGlow 26s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-
-    .rules-accordion > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .rule-item + .rule-item {
-      border-top: 1px solid rgba(31, 41, 55, 0.9);
-    }
-
-    .rule-header {
-      padding: 12px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
-    .rule-title {
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 0.92rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--accent-blue);
-    }
-
-    .rule-toggle {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      margin-left: 10px;
-      flex-shrink: 0;
-    }
-
-    .rule-content {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease-out;
-    }
-
-    .rule-content-inner {
-      padding: 0 16px 12px 16px;
-      font-size: 0.94rem;
-      line-height: 1.7;
-      color: var(--text-main);
-    }
-
-    .rule-content-inner p { margin-bottom: 4px; }
-
-    .rule-content-inner ul {
-      margin: 4px 0 8px 1.2rem;
-      padding-left: 0.4rem;
-    }
-
-    .rule-content-inner li { margin-bottom: 3px; }
-
-    .rule-item.open .rule-content {
-      max-height: 900px;
-    }
-
-    .rule-item.open .rule-toggle {
-      color: var(--accent-yellow);
-    }
-
-    /* ПРИЗЫ */
-
-    .prizes-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-      align-items: stretch;
-      margin-bottom: 20px;
-      margin-top: 10px;
-    }
-
-    .prize-card {
-      flex: 1 1 260px;
-      max-width: 360px;
-      border-radius: 22px;
-      background: radial-gradient(circle at top,
-        rgba(30, 64, 175, 0.9),
-        rgba(15, 23, 42, 0.98));
-      padding: 22px 20px 18px;
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 1);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      position: relative;
-      overflow: hidden;
-      transition: transform 0.18s ease-out, box-shadow 0.18s ease-out, border-color 0.18s ease-out;
-    }
-
-    .prize-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at top,
-        rgba(56, 189, 248, 0.25),
-        transparent 55%);
-      opacity: 0;
-      transition: opacity 0.18s ease;
-      pointer-events: none;
-    }
-
-    .prize-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 20px 50px rgba(56, 189, 248, 0.9);
-      border-color: var(--accent-blue);
-    }
-
-    .prize-card:hover::before {
-      opacity: 1;
-    }
-
-    .prize-image {
-      width: 150px;
-      max-width: 80%;
-      margin: 0 auto 10px auto;
-      display: block;
-      filter: drop-shadow(0 0 22px rgba(56, 189, 248, 0.9));
-      transform: translateZ(0);
-      transition: transform 0.18s ease-out;
-    }
-
-    .prize-card:hover .prize-image {
-      transform: translateY(-4px) scale(1.03);
-    }
-
-    .prize-title {
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 6px;
-    }
-
-    .prize-title.yellow { color: var(--accent-yellow); }
-    .prize-title.blue   { color: var(--accent-blue); }
-
-    .prize-text {
-      font-size: 0.95rem;
-      line-height: 1.6;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .prizes-extra {
-      text-align: center;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      max-width: 880px;
-      margin: 0 auto;
-    }
-
-    /* РЕГИСТРАЦИЯ */
-
-    .signup-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-      gap: 26px;
-      align-items: flex-start;
-    }
-
-    .signup-text {
-      font-size: 0.95rem;
-      line-height: 1.7;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-
-    .signup-logo {
-      width: 90px;
-      margin-bottom: 10px;
-      filter: drop-shadow(0 0 16px rgba(52, 211, 153, 0.9));
-    }
-
-    form { width: 100%; }
-
-    .form-row {
-      margin-bottom: 16px;
-      transition: transform 0.18s ease-out;
-    }
-
-    .form-row:focus-within {
-      transform: translateY(-2px);
-    }
-
-    label {
-      display: block;
-      margin-bottom: 4px;
-      font-size: 0.86rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
-
-    label .req { color: #f97373; }
-
-    input,
-    textarea {
-      width: 100%;
-      padding: 0.8rem 1rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-soft);
-      background: rgba(15, 23, 42, 0.82);
-      color: #f9fafb;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    }
-
-    textarea {
-      border-radius: 16px;
-      min-height: 110px;
-      resize: vertical;
-    }
-
-    input:focus,
-    textarea:focus {
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 1px var(--accent-blue-soft);
-      background: #020617;
-    }
-
-    button[type="submit"] {
-      margin-top: 4px;
-      width: 100%;
-      padding: 0.9rem 1rem;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(90deg, #ef4444, #f97316);
-      color: #0b1120;
-      font-family: 'Russo One', system-ui, sans-serif;
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      cursor: pointer;
-      box-shadow: 0 10px 26px rgba(248, 113, 113, 0.85);
-      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
-    }
-
-    button[type="submit"]:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.95);
-      opacity: 0.96;
-    }
-
-    .form-status {
-      margin-top: 14px;
-      font-size: 0.9rem;
-      display: none;
-      text-align: center;
-      border-radius: 999px;
-      padding: 0.45rem 0.8rem;
-    }
-
-    .form-status.visible { display: inline-block; }
-    .form-status.pending {
-      color: #e5e7eb;
-      background: rgba(148, 163, 184, 0.18);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-    }
-    .form-status.success {
-      color: #bbf7d0;
-      background: rgba(22, 163, 74, 0.22);
-      border: 1px solid rgba(34, 197, 94, 0.7);
-    }
-    .form-status.error {
-      color: #fecaca;
-      background: rgba(248, 113, 113, 0.2);
-      border: 1px solid rgba(248, 113, 113, 0.7);
-    }
-
-    /* FOOTER */
-
-    footer {
-      padding: 32px 16px 20px;
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      background: rgba(15, 23, 42, 0.97);
-      border-top: 1px solid rgba(30, 64, 175, 0.7);
-    }
-
-    /* ADAPTIVE */
-
-    @media (max-width: 992px) {
-      .hero-grid { grid-template-columns: minmax(0, 1fr); }
-      .signup-grid { grid-template-columns: minmax(0, 1fr); }
-      .about-grid  { grid-template-columns: minmax(0, 1fr); }
-    }
-
-    @media (max-width: 768px) {
-      section { padding: 80px 14px; }
-      #hero { padding-top: 96px; }
-
-      .panel {
-        padding: 24px 20px 22px;
-        border-radius: 24px;
-      }
-
-      .heading-main {
-        font-size: 1.7rem;
-        letter-spacing: 0.14em;
-      }
-
-      .hero-logo-big { width: 120px; }
-      .hero-title    { font-size: 1.6rem; }
-      .hero-subtitle { font-size: 0.92rem; }
-
-      .nav-title { display: none; }
-
-      .nav-menu {
-        position: absolute;
-        top: 64px;
-        right: 0;
-        left: 0;
-        padding: 10px 16px 14px;
-        background: rgba(15, 23, 42, 0.97);
-        border-bottom: 1px solid rgba(30, 64, 175, 0.7);
-        flex-direction: column;
-        gap: 10px;
-        transform: translateY(-110%);
-        opacity: 0;
-        pointer-events: none;
-        transition: transform 0.18s ease, opacity 0.18s ease;
-      }
-
-      .nav-menu.open {
-        transform: translateY(0);
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .nav-toggle { display: block; }
-    }
-
-    @media (max-width: 480px) {
-      .hero-title   { font-size: 1.45rem; }
-      .hero-text    { font-size: 0.9rem; }
-      .nav          { padding-inline: 10px; }
-      .nav-logo     { width: 40px; }
-      .count-box    { min-width: 60px; }
-      .prize-card   { max-width: 100%; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Қауіпсіздік техникасы және электр қауіпсіздігі — Интерактивті сабақ (2 сағ)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e10;
+    --bg-2: #16161a;
+    --surface: #1c1c21;
+    --surface-2: #24242b;
+    --border: #2e2e36;
+    --text: #ececf1;
+    --text-dim: #9a9aa6;
+    --text-mute: #6a6a76;
+    --hazard: #ffd60a;
+    --hazard-2: #ffb800;
+    --danger: #ff3b30;
+    --safe: #30d158;
+    --info: #64d2ff;
+    --accent: #ffd60a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(circle at 20% 0%, rgba(255, 214, 10, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 80% 100%, rgba(100, 210, 255, 0.04) 0%, transparent 50%);
+  }
+
+  .hazard-stripe {
+    height: 18px;
+    background: repeating-linear-gradient(
+      135deg,
+      var(--hazard) 0 22px,
+      #0e0e10 22px 44px
+    );
+  }
+
+  /* ===== Top navigation ===== */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(14, 14, 16, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1.5px;
+  }
+  .logo-mark {
+    width: 36px;
+    height: 36px;
+    background: var(--hazard);
+    color: #000;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px;
+    transform: rotate(-3deg);
+  }
+  .nav-links {
+    display: flex;
+    gap: 2px;
+    flex-wrap: wrap;
+  }
+  .nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 8px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: all .2s;
+    letter-spacing: .3px;
+  }
+  .nav-links a:hover { color: var(--text); background: var(--surface); }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--surface);
+    position: relative;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--hazard), var(--hazard-2));
+    transition: width .3s;
+  }
+
+  /* ===== Hero ===== */
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 32px 60px;
+    position: relative;
+  }
+  .hero-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--hazard);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    padding: 6px 12px;
+    border: 1px solid var(--hazard);
+  }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 110px);
+    line-height: .9;
+    letter-spacing: 1px;
+    margin-bottom: 24px;
+  }
+  .hero h1 .accent {
+    color: var(--hazard);
+    display: inline-block;
+    position: relative;
+  }
+  .hero h1 .accent::after {
+    content: '';
+    position: absolute;
+    bottom: 8px; left: 0; right: 0;
+    height: 8px;
+    background: var(--hazard);
+    opacity: .15;
+    z-index: -1;
+  }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 680px;
+    margin-bottom: 48px;
+  }
+  .hero-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 24px;
+    padding: 24px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .meta-item .label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-mute);
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  .meta-item .value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--text);
+    letter-spacing: 1px;
+  }
+
+  .hero-toc {
+    margin-top: 48px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .hero-toc h3 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--hazard);
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .hero-toc ol {
+    list-style: none;
+    counter-reset: toc;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 8px;
+  }
+  .hero-toc li {
+    counter-increment: toc;
+    padding: 10px 14px;
+    border-left: 2px solid var(--border);
+    transition: all .2s;
+  }
+  .hero-toc li:hover { border-color: var(--hazard); background: var(--surface-2); }
+  .hero-toc li::before {
+    content: '0' counter(toc);
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--hazard);
+    margin-right: 10px;
+    font-size: 12px;
+  }
+  .hero-toc a { color: var(--text-dim); text-decoration: none; font-size: 14px; }
+  .hero-toc li:hover a { color: var(--text); }
+  .hero-toc .duration {
+    color: var(--text-mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    float: right;
+  }
+
+  /* ===== Section base ===== */
+  section.module {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 32px;
+    border-top: 1px solid var(--border);
+  }
+  .module-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 48px;
+    flex-wrap: wrap;
+  }
+  .module-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--hazard);
+    font-size: 14px;
+    letter-spacing: 2px;
+  }
+  .module-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    letter-spacing: 1px;
+    line-height: 1;
+  }
+  .module-intro {
+    color: var(--text-dim);
+    max-width: 680px;
+    font-size: 17px;
+    margin-top: 8px;
+  }
+
+  .sub-h {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    letter-spacing: 1px;
+    margin: 40px 0 16px;
+  }
+  .sub-h-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--hazard);
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  /* ===== Theory cards ===== */
+  .theory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .theory-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    transition: all .3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .theory-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--hazard);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform .3s;
+  }
+  .theory-card:hover { border-color: var(--hazard); transform: translateY(-2px); }
+  .theory-card:hover::before { transform: scaleY(1); }
+  .card-icon {
+    width: 44px; height: 44px;
+    display: grid;
+    place-items: center;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+    font-size: 20px;
+  }
+  .theory-card h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .theory-card p {
+    color: var(--text-dim);
+    font-size: 15px;
+  }
+
+  .definition {
+    background: linear-gradient(135deg, var(--surface), var(--surface-2));
+    border-left: 4px solid var(--hazard);
+    padding: 32px;
+    margin: 32px 0;
+  }
+  .definition .term {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--hazard);
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .definition .meaning {
+    font-size: 17px;
+    line-height: 1.55;
+  }
+
+  /* Tables */
+  .voltage-table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 15px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+  }
+  .voltage-table th, .data-table th {
+    background: var(--surface-2);
+    padding: 14px 18px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  .voltage-table td, .data-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: top;
+  }
+  .voltage-table tr:last-child td, .data-table tr:last-child td { border-bottom: none; }
+  .voltage-table .current {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--hazard);
+    font-weight: 700;
+  }
+  .voltage-table .level-1 { color: var(--safe); }
+  .voltage-table .level-2 { color: var(--info); }
+  .voltage-table .level-3 { color: var(--hazard); }
+  .voltage-table .level-4 { color: var(--danger); }
+  .data-table .grp {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--hazard);
+    font-weight: 700;
+  }
+
+  /* Boxes */
+  .warning-box, .info-box, .tip-box {
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    margin: 24px 0;
+    align-items: flex-start;
+    border-radius: 0;
+  }
+  .warning-box {
+    background: rgba(255, 59, 48, 0.06);
+    border: 1px solid rgba(255, 59, 48, 0.3);
+  }
+  .info-box {
+    background: rgba(100, 210, 255, 0.06);
+    border: 1px solid rgba(100, 210, 255, 0.25);
+  }
+  .tip-box {
+    background: rgba(48, 209, 88, 0.05);
+    border: 1px solid rgba(48, 209, 88, 0.25);
+  }
+  .warning-icon, .info-icon, .tip-icon {
+    flex-shrink: 0;
+    width: 40px; height: 40px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    font-weight: 800;
+  }
+  .warning-icon { background: var(--danger); color: #fff; }
+  .info-icon { background: var(--info); color: #000; }
+  .tip-icon { background: var(--safe); color: #000; }
+  .warning-box h4, .info-box h4, .tip-box h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .warning-box h4 { color: var(--danger); }
+  .info-box h4 { color: var(--info); }
+  .tip-box h4 { color: var(--safe); }
+  .warning-box p, .info-box p, .tip-box p,
+  .warning-box ul, .info-box ul, .tip-box ul { color: var(--text-dim); font-size: 15px; }
+  .warning-box ul, .info-box ul, .tip-box ul { padding-left: 20px; margin-top: 8px; }
+  .warning-box li, .info-box li, .tip-box li { margin-bottom: 4px; }
+
+  /* Accordion */
+  .accordion { margin: 24px 0; }
+  .acc-item { border-bottom: 1px solid var(--border); }
+  .acc-item:first-child { border-top: 1px solid var(--border); }
+  .acc-head {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--text);
+    padding: 22px 4px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 17px;
+    text-align: left;
+    transition: padding .2s;
+  }
+  .acc-head:hover { padding-left: 12px; }
+  .acc-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--hazard);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .acc-head .arrow {
+    margin-left: auto;
+    transition: transform .3s;
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+  .acc-item.open .acc-head .arrow { transform: rotate(45deg); color: var(--hazard); }
+  .acc-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s ease;
+    color: var(--text-dim);
+    font-size: 15px;
+    padding-left: 40px;
+  }
+  .acc-item.open .acc-body { max-height: 800px; }
+  .acc-body-inner { padding: 0 0 22px 0; }
+  .acc-body-inner ul { padding-left: 18px; margin-top: 8px; }
+  .acc-body-inner li { margin-bottom: 4px; }
+
+  /* ===== Practice ===== */
+  .practice-area {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 32px;
+    margin-bottom: 24px;
+  }
+  .practice-area h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .practice-desc {
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+  .scene {
+    background: #0a0a0c;
+    border: 1px dashed var(--border);
+    padding: 28px;
+    min-height: 180px;
+    margin-bottom: 16px;
+    position: relative;
+    border-radius: 4px;
+  }
+  .scene-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-mute);
+    letter-spacing: 1.5px;
+    margin-bottom: 14px;
+  }
+  .scene-status.danger { color: var(--danger); }
+  .scene-status.safe { color: var(--safe); }
+
+  .switch-demo {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .lamp {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #2a2a32, #15151a);
+    border: 2px solid var(--border);
+    transition: all .4s;
+  }
+  .lamp.on {
+    background: radial-gradient(circle at 30% 30%, #fff8c4, var(--hazard));
+    border-color: var(--hazard);
+    box-shadow: 0 0 50px rgba(255, 214, 10, 0.6), 0 0 100px rgba(255, 214, 10, 0.3);
+  }
+  .switch {
+    width: 80px; height: 130px;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .switch:hover { border-color: var(--hazard); }
+  .switch-handle {
+    position: absolute;
+    left: 8px; right: 8px;
+    height: 50px;
+    background: linear-gradient(180deg, #3a3a44, #25252b);
+    border-radius: 4px;
+    transition: top .25s cubic-bezier(.5,1.7,.5,1);
+    top: 70px;
+    box-shadow: 0 4px 8px rgba(0,0,0,.4);
+  }
+  .switch.on .switch-handle { top: 10px; }
+  .switch-label {
+    position: absolute;
+    bottom: -22px; left: 0; right: 0;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+  }
+  .ppe-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .ppe-item {
+    padding: 14px;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all .2s;
+    text-align: center;
+    user-select: none;
+  }
+  .ppe-item:hover { border-color: var(--hazard); }
+  .ppe-item.selected {
+    border-color: var(--safe);
+    background: rgba(48, 209, 88, 0.1);
+  }
+  .ppe-item.selected.wrong {
+    border-color: var(--danger);
+    background: rgba(255, 59, 48, 0.1);
+  }
+  .ppe-icon { font-size: 28px; margin-bottom: 6px; }
+  .ppe-name { font-size: 13px; color: var(--text-dim); }
+  .ppe-item.selected .ppe-name { color: var(--text); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: var(--hazard);
+    color: #000;
+    border: none;
+    font-family: 'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: .5px;
+    cursor: pointer;
+    transition: all .2s;
+    text-transform: uppercase;
+  }
+  .btn:hover { background: var(--hazard-2); transform: translateY(-1px); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn.secondary:hover { border-color: var(--hazard); color: var(--hazard); background: transparent; }
+
+  .feedback {
+    margin-top: 12px;
+    padding: 14px 18px;
+    font-size: 14px;
+    border-left: 3px solid;
+    background: var(--surface-2);
+    display: none;
+  }
+  .feedback.show { display: block; }
+  .feedback.correct { border-color: var(--safe); color: var(--safe); }
+  .feedback.incorrect { border-color: var(--danger); color: var(--danger); }
+
+  .sequence-task { margin-top: 16px; }
+  .seq-item {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    user-select: none;
+    transition: all .15s;
+  }
+  .seq-item:hover { border-color: var(--hazard); }
+  .seq-item.dragging { opacity: .4; }
+  .seq-item.drag-over { border-top: 3px solid var(--hazard); }
+  .seq-handle { color: var(--text-mute); font-family: 'JetBrains Mono', monospace; }
+  .seq-pos {
+    background: var(--bg);
+    color: var(--hazard);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    width: 28px; height: 28px;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+  }
+  .seq-text { flex: 1; font-size: 14px; }
+  .seq-item.correct { border-color: var(--safe); background: rgba(48, 209, 88, .08); }
+  .seq-item.incorrect { border-color: var(--danger); background: rgba(255, 59, 48, .08); }
+
+  /* Match task */
+  .match-task {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 16px;
+  }
+  .match-col h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-mute);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .match-item {
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+    padding: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all .2s;
+    font-size: 14px;
+    user-select: none;
+  }
+  .match-item:hover { border-color: var(--hazard); }
+  .match-item.selected { border-color: var(--hazard); background: rgba(255, 214, 10, .06); }
+  .match-item.matched { 
+    border-color: var(--safe); 
+    background: rgba(48, 209, 88, .08);
+    cursor: default;
+  }
+  .match-item.matched::before {
+    content: '✓ ';
+    color: var(--safe);
+    font-weight: 700;
+  }
+  .match-item.wrong { 
+    border-color: var(--danger); 
+    background: rgba(255, 59, 48, .08);
+    animation: shake .3s;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+  }
+  @media (max-width: 600px) {
+    .match-task { grid-template-columns: 1fr; }
+  }
+
+  /* Scenario task */
+  .scenario {
+    background: var(--surface-2);
+    padding: 20px;
+    border-left: 3px solid var(--hazard);
+    margin-bottom: 16px;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .scenario-q {
+    font-weight: 600;
+    margin-top: 12px;
+    color: var(--text);
+  }
+  .scenario-options {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+  }
+  .scenario-opt {
+    padding: 12px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all .2s;
+    font-size: 14px;
+  }
+  .scenario-opt:hover:not(.locked) { border-color: var(--hazard); }
+  .scenario-opt.correct { border-color: var(--safe); background: rgba(48, 209, 88, .08); color: var(--safe); }
+  .scenario-opt.incorrect { border-color: var(--danger); background: rgba(255, 59, 48, .08); color: var(--danger); }
+
+  /* ===== Test ===== */
+  .test-container {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 40px;
+  }
+  .test-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .test-counter {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+  }
+  .test-counter span { color: var(--hazard); font-weight: 700; }
+  .test-progress {
+    flex: 1;
+    max-width: 300px;
+    height: 4px;
+    background: var(--surface-2);
+    margin: 0 16px;
+    overflow: hidden;
+  }
+  .test-progress-fill {
+    height: 100%;
+    background: var(--hazard);
+    transition: width .3s;
+  }
+  .question-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--hazard);
+    font-size: 13px;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .question {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+  .options { display: grid; gap: 12px; margin-bottom: 28px; }
+  .option {
+    padding: 16px 20px;
+    background: var(--surface-2);
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 15px;
+  }
+  .option:hover:not(.disabled) { border-color: var(--hazard); }
+  .option.selected { border-color: var(--hazard); background: rgba(255, 214, 10, .05); }
+  .option.correct { border-color: var(--safe); background: rgba(48, 209, 88, .08); color: var(--safe); }
+  .option.incorrect { border-color: var(--danger); background: rgba(255, 59, 48, .08); color: var(--danger); }
+  .option.disabled { cursor: default; }
+  .option-letter {
+    width: 32px; height: 32px;
+    display: grid;
+    place-items: center;
+    background: var(--bg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .option.correct .option-letter { background: var(--safe); color: #000; }
+  .option.incorrect .option-letter { background: var(--danger); color: #fff; }
+
+  .test-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .test-explanation {
+    margin-top: 18px;
+    padding: 16px 20px;
+    background: var(--bg);
+    border-left: 3px solid var(--hazard);
+    font-size: 14px;
+    color: var(--text-dim);
+    display: none;
+  }
+  .test-explanation.show { display: block; }
+  .test-explanation strong { color: var(--text); }
+
+  .result-screen { text-align: center; padding: 20px 0; }
+  .result-score {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 110px;
+    line-height: 1;
+    margin: 16px 0;
+  }
+  .result-score.high { color: var(--safe); }
+  .result-score.mid { color: var(--hazard); }
+  .result-score.low { color: var(--danger); }
+  .result-message {
+    font-size: 18px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .result-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 16px;
+    margin: 32px auto;
+    max-width: 700px;
+  }
+  .result-stat {
+    padding: 18px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+  }
+  .result-stat .v {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--hazard);
+  }
+  .result-stat .l {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-mute);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* Signs grid */
+  .signs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+  .sign-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+    transition: all .2s;
+  }
+  .sign-card:hover { border-color: var(--hazard); transform: translateY(-2px); }
+  .sign-visual {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 14px;
+    display: grid;
+    place-items: center;
+    font-size: 36px;
+    border-radius: 50%;
+    border: 4px solid;
+  }
+  .sign-card.prohibit .sign-visual { border-color: var(--danger); color: var(--danger); }
+  .sign-card.warn .sign-visual { 
+    border-color: var(--hazard); 
+    border-radius: 0;
+    transform: rotate(45deg);
+    border-width: 0;
+    background: var(--hazard);
+    color: #000;
+    width: 70px; height: 70px;
+  }
+  .sign-card.warn .sign-visual span { transform: rotate(-45deg); display: block; font-weight: 800; }
+  .sign-card.prescribe .sign-visual { 
+    border-color: var(--info); 
+    background: var(--info);
+    color: #000;
+    border-width: 0;
+  }
+  .sign-card.point .sign-visual { 
+    border-color: var(--safe); 
+    background: var(--safe);
+    color: #000;
+    border-width: 0;
+    border-radius: 8px;
+  }
+  .sign-card h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+  }
+  .sign-card p { font-size: 13px; color: var(--text-dim); }
+  .sign-type {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .sign-card.prohibit .sign-type { color: var(--danger); }
+  .sign-card.warn .sign-type { color: var(--hazard); }
+  .sign-card.prescribe .sign-type { color: var(--info); }
+  .sign-card.point .sign-type { color: var(--safe); }
+
+  /* First aid steps */
+  .aid-steps {
+    counter-reset: aid;
+    margin: 24px 0;
+  }
+  .aid-step {
+    counter-increment: aid;
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .aid-step:last-child { border-bottom: none; }
+  .aid-step::before {
+    content: counter(aid, decimal-leading-zero);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: var(--hazard);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 70px;
+  }
+  .aid-step h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .aid-step p { color: var(--text-dim); font-size: 15px; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+    padding: 40px 32px;
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 13px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 1px;
+  }
+
+  @media (max-width: 720px) {
+    .topbar-inner { padding: 14px 20px; flex-direction: column; align-items: flex-start; }
+    .nav-links { font-size: 11px; }
+    .hero { padding: 50px 20px 40px; }
+    section.module { padding: 50px 20px; }
+    .test-container, .practice-area { padding: 24px; }
+    .switch-demo { flex-direction: column; align-items: flex-start; }
+    .test-progress { display: none; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity .6s, transform .6s;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
 </head>
-
 <body>
-  <!-- NAVBAR -->
-  <header class="nav">
-    <div class="nav-left">
-      <img src="logo.png" alt="MLBB KazNARU" class="nav-logo" />
-      <div class="nav-title">MLBB · КУБОК ИТФ 2025</div>
+
+<div class="hazard-stripe"></div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-mark">⚡</div>
+      <span>ҚТ · Электр қауіпсіздігі</span>
     </div>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Меню">☰</button>
-    <nav class="nav-menu" id="nav-menu">
-      <a href="#hero">О ТУРНИРЕ</a>
-      <a href="#about">ФОРМАТ</a>
-      <a href="#rules">ПРАВИЛА</a>
-      <a href="#prizes">ПРИЗЫ</a>
-      <a href="#signup">РЕГИСТРАЦИЯ</a>
+    <nav class="nav-links">
+      <a href="#intro">Кіріспе</a>
+      <a href="#theory1">Негіздер</a>
+      <a href="#theory2">Әсер</a>
+      <a href="#rooms">Үй-жайлар</a>
+      <a href="#groups">Топтар</a>
+      <a href="#ppe">ҚҚК</a>
+      <a href="#signs">Белгілер</a>
+      <a href="#rules">Ережелер</a>
+      <a href="#firstaid">Көмек</a>
+      <a href="#practice">Практика</a>
+      <a href="#test">Тест</a>
     </nav>
-  </header>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</header>
 
-  <main>
-    <!-- HERO -->
-    <section id="hero">
-      <div class="container">
-        <div class="panel reveal">
-          <div class="hero-grid">
-            <div>
-              <img src="logo.png" alt="MLBB KazNARU" class="hero-logo-big" />
-              <div class="hero-tagline">ОФИЦИАЛЬНЫЙ УНИВЕРСИТЕТСКИЙ ТУРНИР</div>
-              <div class="hero-title">MOBILE LEGENDS: BANG BANG</div>
-              <div class="hero-subtitle">ITF POWER LEAGUE · КУБОК ИТФ · КАЗНАИУ</div>
+<!-- HERO -->
+<section class="hero" id="intro">
+  <div class="hero-tag">САБАҚ № 01 · ЭНЕРГЕТИКА ЖӘНЕ ЭЛЕКТРОТЕХНИКА</div>
+  <h1>Қауіпсіздік<br>техникасы<br>және <span class="accent">электр</span><br>қауіпсіздігі</h1>
+  <p class="hero-sub">
+    Электр қондырғыларымен жұмыс істеу кезіндегі қауіпсіздік ережелерін, қорғаныс құралдарын, апаттық жағдайларда әрекет ету тәртібін және алғашқы медициналық көмекті үйренуге арналған толық интерактивті сабақ.
+  </p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="label">Деңгей</div>
+      <div class="value">Базалық</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Уақыт</div>
+      <div class="value">~ 2 сағат</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Модульдер</div>
+      <div class="value">9 бөлім</div>
+    </div>
+    <div class="meta-item">
+      <div class="label">Сұрақтар</div>
+      <div class="value">25 тест</div>
+    </div>
+  </div>
 
-              <div class="hero-text">
-                <p>
-                  Собери состав 5×5, займи место на арене и покажи, какая команда
-                  доминирует в MLBB на факультете инженерные технологии.
-                </p>
-                <p>
-                  Динамичные матчи, честный регламент и сильные соперники —
-                  всё как на настоящей киберспортивной сцене.
-                </p>
-              </div>
+  <div class="hero-toc">
+    <h3>// САБАҚТЫҢ ҚҰРЫЛЫМЫ</h3>
+    <ol>
+      <li><a href="#theory1">Электр тогының негіздері</a><span class="duration">15 мин</span></li>
+      <li><a href="#theory2">Токтың адамға әсері</a><span class="duration">15 мин</span></li>
+      <li><a href="#rooms">Үй-жайлардың сыныптамасы</a><span class="duration">10 мин</span></li>
+      <li><a href="#groups">Электр қауіпсіздігі топтары</a><span class="duration">15 мин</span></li>
+      <li><a href="#ppe">Жеке қорғаныс құралдары</a><span class="duration">15 мин</span></li>
+      <li><a href="#signs">Қауіпсіздік белгілері</a><span class="duration">10 мин</span></li>
+      <li><a href="#rules">Жұмыс ережелері</a><span class="duration">15 мин</span></li>
+      <li><a href="#firstaid">Алғашқы медициналық көмек</a><span class="duration">15 мин</span></li>
+      <li><a href="#practice">Практикалық жаттығулар</a><span class="duration">15 мин</span></li>
+      <li><a href="#test">Қорытынды тест</a><span class="duration">15 мин</span></li>
+    </ol>
+  </div>
+</section>
 
-              <div class="hero-actions">
-                <a href="#signup"><button class="btn-primary">ПОДАТЬ ЗАЯВКУ</button></a>
-                <a href="#prizes"><button type="button" class="btn-ghost">ПОСМОТРЕТЬ ПРИЗЫ</button></a>
-              </div>
+<!-- MODULE 1: Basics -->
+<section class="module reveal" id="theory1">
+  <div class="module-header">
+    <div>
+      <div class="module-num">01 / ТЕОРИЯ</div>
+      <h2 class="module-title">Электр тогының негіздері</h2>
+    </div>
+    <p class="module-intro">
+      Электр қауіпсіздігі — адамды электр тогының, электр доғасының, электромагниттік өрістің зиянды әсерінен қорғауды қамтамасыз ететін ұйымдастырушылық және техникалық шаралар жүйесі.
+    </p>
+  </div>
 
-              <div class="countdown-wrapper">
-                <div class="countdown-label">ДО НАЧАЛА ТУРНИРА:</div>
-                <div class="countdown" id="countdown">
-                  <div class="count-box">
-                    <div class="count-value" id="cd-days">00</div>
-                    <div class="count-unit">дней</div>
-                  </div>
-                  <div class="count-box">
-                    <div class="count-value" id="cd-hours">00</div>
-                    <div class="count-unit">часов</div>
-                  </div>
-                  <div class="count-box">
-                    <div class="count-value" id="cd-minutes">00</div>
-                    <div class="count-unit">минут</div>
-                  </div>
-                  <div class="count-box">
-                    <div class="count-value" id="cd-seconds">00</div>
-                    <div class="count-unit">секунд</div>
-                  </div>
-                </div>
-                <div class="countdown-note" id="countdown-note"></div>
-              </div>
-            </div>
+  <div class="theory-grid">
+    <div class="theory-card">
+      <div class="card-icon">⚡</div>
+      <h3>Электр тогы (I)</h3>
+      <p>Зарядталған бөлшектердің бағытталған қозғалысы. Ампермен (А) өлшенеді. Айнымалы (~) және тұрақты (=) болып бөлінеді.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🔌</div>
+      <h3>Кернеу (U)</h3>
+      <p>Екі нүкте арасындағы потенциалдар айырмасы. Вольтпен (В) өлшенеді. Қазақстанда тұрмыстық желі — 220 В, өндірісте — 380 В.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">⚖️</div>
+      <h3>Кедергі (R)</h3>
+      <p>Материалдың тоқтың өтуіне қарсылығы. Оммен (Ом) өлшенеді. Адам ағзасының кедергісі ~1000 Ом-нан басталады.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🔋</div>
+      <h3>Ом заңы</h3>
+      <p>I = U / R. Тізбектегі ток күші кернеуге тура, кедергіге кері пропорционал. Қауіпсіздіктің негізгі формуласы.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🛡️</div>
+      <h3>Жерге қосу</h3>
+      <p>Жабдықтың металл бөліктерін жермен әдейі электр байланысы. Зақымдану кезінде токты жерге бұру арқылы адамды қорғайды.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">⚠️</div>
+      <h3>Қысқа тұйықталу</h3>
+      <p>Тізбектің кедергісі күрт төмендейтін авариялық режим. Жоғары токтар, қызу, өрт және жабдықтың істен шығуын тудырады.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🔥</div>
+      <h3>Электр доғасы</h3>
+      <p>Электродтар арасындағы газ ортасында өтетін электр разряды. Температурасы 4000°C жетеді, ауыр күйіктер тудырады.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">📡</div>
+      <h3>Қадам кернеуі</h3>
+      <p>Жерде жатқан тоқ көзіне жақын тұрған адамның екі аяғы арасындағы кернеу. Қауіпті аймақтан кіші қадаммен шығу керек.</p>
+    </div>
+  </div>
 
-            <div class="hero-side-card">
-              <div class="hero-side-label">СТАТУС ТУРНИРА</div>
-              <div class="hero-side-value">ITF POWER LEAGUE</div>
-              <div class="hero-side-line"></div>
-              <div class="hero-side-label">ФОРМАТ</div>
-              <div class="text-main" style="font-size:0.9rem;">
-                Команды 5×5, групповой этап и плей-офф. Матчи проводятся оффлайн.
-              </div>
-              <div class="hero-side-line"></div>
-              <div class="hero-side-label">КТО МОЖЕТ УЧАСТВОВАТЬ</div>
-              <div class="text-main" style="font-size:0.9rem;">
-                Студенты факультета инженерные технологии университета КазНАИУ.
-              </div>
-            </div>
-          </div>
+  <div class="definition">
+    <div class="term">// АНЫҚТАМА</div>
+    <div class="meaning">
+      <strong>Электр қондырғысы</strong> — электр энергиясын өндіру, түрлендіру, беру, бөлу немесе тұтыну үшін арналған машиналардың, аппараттардың, желілердің және оларға қызмет көрсететін көмекші жабдықтың (ғимараттар, имараттар) жиынтығы.
+    </div>
+  </div>
+
+  <div class="definition">
+    <div class="term">// АНЫҚТАМА</div>
+    <div class="meaning">
+      <strong>Кернеу астындағы бөлік</strong> — қалыпты жұмыс кезінде кернеу беріліп тұрған электр қондырғысының өткізгіш бөлігі (сым, шина, орама, контакт).
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// ЭЛЕКТР ҚОНДЫРҒЫЛАРЫНЫҢ КЕРНЕУІ БОЙЫНША СЫНЫПТАМАСЫ</span>
+  <h3 class="sub-h" style="margin-top:8px;">Кернеу деңгейлері</h3>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Сыныптама</th>
+        <th>Кернеу диапазоны</th>
+        <th>Мысалдар</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:var(--safe)">Аса төмен кернеу</strong></td>
+        <td>50 В дейін айнымалы / 120 В дейін тұрақты</td>
+        <td>Ойыншықтар, диктофондар, светодиод шамдары</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--info)">1000 В дейінгі</strong></td>
+        <td>50 В – 1000 В айнымалы</td>
+        <td>220/380 В тұрмыстық және өндірістік желі</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--hazard)">1000 В жоғары</strong></td>
+        <td>1 кВ – 35 кВ (орта), 35 кВ – 220 кВ (жоғары)</td>
+        <td>Бөлуші қосалқы станциялар, өндірістік қондырғылар</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--danger)">Аса жоғары кернеу</strong></td>
+        <td>330 кВ – 1150 кВ</td>
+        <td>Магистральдық электр беру желілері (ЭБЖ)</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <div class="info-icon">i</div>
+    <div>
+      <h4>Айнымалы және тұрақты ток</h4>
+      <p><strong>Айнымалы ток (АС, ~)</strong> — бағыты мен мәні уақыт бойынша периодты өзгеретін ток. Қазақстанда 50 Гц жиілікпен қолданылады. Адам үшін қауіптілеу — фибрилляция шегі төмен.</p>
+      <p style="margin-top:8px;"><strong>Тұрақты ток (DC, =)</strong> — бағыты мен шамасы тұрақты ток. Бірдей кернеуде айнымалы тоққа қарағанда 4-5 есе аз қауіпті, бірақ доға беру ұзақ болуы мүмкін.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 2: Effects on human -->
+<section class="module reveal" id="theory2">
+  <div class="module-header">
+    <div>
+      <div class="module-num">02 / ТЕОРИЯ</div>
+      <h2 class="module-title">Токтың адамға әсері</h2>
+    </div>
+    <p class="module-intro">
+      Адам ағзасы арқылы өткен ток термиялық, электролиттік, биологиялық және механикалық әсер тигізеді. Зақымданудың ауырлығы көптеген факторларға байланысты.
+    </p>
+  </div>
+
+  <span class="sub-h-tag">// ӘСЕР ТҮРЛЕРІ</span>
+  <div class="theory-grid">
+    <div class="theory-card">
+      <div class="card-icon">🌡️</div>
+      <h3>Термиялық</h3>
+      <p>Тіндерді, қан тамырларын, нерв талшықтарын қыздыру нәтижесінде күйік пайда болады.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🧪</div>
+      <h3>Электролиттік</h3>
+      <p>Қан мен басқа ағзалық сұйықтықтардың химиялық құрамының өзгеруі.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">❤️</div>
+      <h3>Биологиялық</h3>
+      <p>Тірі тіндердің (бұлшықет, нерв) тітіркенуі, жүректің фибрилляциясы.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">💥</div>
+      <h3>Механикалық</h3>
+      <p>Бұлшықеттің күшті жиырылуынан туындайтын жарықшалар, сүйектердің сынуы.</p>
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// ЗАҚЫМДАНУ ТҮРЛЕРІ</span>
+  <h3 class="sub-h" style="margin-top:8px;">Электр зақымданулары</h3>
+
+  <div class="info-box">
+    <div class="info-icon">i</div>
+    <div>
+      <h4>Жалпы (электр соққысы)</h4>
+      <p>Тоқ ішкі ағзалар арқылы өтеді. Тыныс алу мен жүрек жұмысының бұзылуы, естен тану, өлім қаупі.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-icon">i</div>
+    <div>
+      <h4>Жергілікті электр жарақаттары</h4>
+      <ul>
+        <li><strong>Электр күйігі</strong> — токтан немесе доғадан болатын күйік (4 дәрежеге бөлінеді)</li>
+        <li><strong>Электр белгілері</strong> — теріде қалған сұр-сары дөңгелек дақтар</li>
+        <li><strong>Терінің металлдануы</strong> — балқыған металл бөлшектерінің теріге сіңуі</li>
+        <li><strong>Электр офтальмиясы</strong> — доғаның ультракүлгін сәулесінен болатын көздің зақымдануы</li>
+        <li><strong>Механикалық зақымданулар</strong> — бұлшықет талмасынан туындайтын жарықтар</li>
+      </ul>
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// ТОКТЫҢ КҮШІНЕ ТӘУЕЛДІ ӘСЕР</span>
+  <h3 class="sub-h" style="margin-top:8px;">Айнымалы ток (50 Гц)</h3>
+
+  <table class="voltage-table">
+    <thead>
+      <tr>
+        <th>Ток күші</th>
+        <th>Әсері</th>
+        <th>Деңгей</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="current">0.6 – 1.5 мА</td>
+        <td>Сезілмейтін шек, әлсіз дірілдеу</td>
+        <td class="level-1">Қауіпсіз</td>
+      </tr>
+      <tr>
+        <td class="current">2 – 5 мА</td>
+        <td>Қолда күшті дірілдеу, ауырсыну</td>
+        <td class="level-1">Сезілетін</td>
+      </tr>
+      <tr>
+        <td class="current">5 – 10 мА</td>
+        <td>Қолдағы күшті дірілдеу мен ауыру күшейеді</td>
+        <td class="level-2">Сезілетін</td>
+      </tr>
+      <tr>
+        <td class="current">10 – 15 мА</td>
+        <td><strong>Жібермейтін шек</strong> — қолды ажырата алмау</td>
+        <td class="level-2">Қауіпті</td>
+      </tr>
+      <tr>
+        <td class="current">25 – 50 мА</td>
+        <td>Тыныс алу қиындайды, бұлшықет талмасы</td>
+        <td class="level-3">Аса қауіпті</td>
+      </tr>
+      <tr>
+        <td class="current">50 – 100 мА</td>
+        <td>Тыныс алудың салдануы, жүрек ритмі бұзылуы</td>
+        <td class="level-3">Аса қауіпті</td>
+      </tr>
+      <tr>
+        <td class="current">100 мА – 5 А</td>
+        <td>Жүректің фибрилляциясы, өлім қаупі</td>
+        <td class="level-4">Өлімге қауіпті</td>
+      </tr>
+      <tr>
+        <td class="current">5 А-дан жоғары</td>
+        <td>Тыныс алу мен жүректің тоқтауы, ауыр күйіктер</td>
+        <td class="level-4">Өлімге қауіпті</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <span class="sub-h-tag">// ҚАУІПТІЛІККЕ ӘСЕР ЕТЕТІН ФАКТОРЛАР</span>
+  <h3 class="sub-h" style="margin-top:8px;">Зақымдану дәрежесін анықтайтын жағдайлар</h3>
+
+  <div class="theory-grid">
+    <div class="theory-card">
+      <div class="card-icon">⏱️</div>
+      <h3>Әсер ету уақыты</h3>
+      <p>Уақыт ұзаған сайын тері кедергісі төмендеп, ток күші өседі. 1 секундтан кейін зақымдану ауырлайды.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🛤️</div>
+      <h3>Тоқтың жолы</h3>
+      <p>«Қол—қол», «қол—аяқ» жолдары жүрек арқылы өтеді — ең қауіпті. «Аяқ—аяқ» — салыстырмалы қауіпсіз.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">💧</div>
+      <h3>Терінің жағдайы</h3>
+      <p>Дымқыл, жараланған, жұқа тері кедергісі төмен. Құрғақ, қатты тері — кедергісі жоғары, қауіпсіздеу.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🌡️</div>
+      <h3>Қоршаған орта</h3>
+      <p>Ылғал, жоғары температура, өткізгіш шаң, газдар адам ағзасының тоққа қарсы тұру қабілетін төмендетеді.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🫀</div>
+      <h3>Жеке жағдайы</h3>
+      <p>Шаршағандық, мас күй, аурулар (жүрек, нерв), стресс — токтың әсерін күшейтеді.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">📊</div>
+      <h3>Жиілік</h3>
+      <p>50–60 Гц айнымалы ток ең қауіпті. Жоғары жиіліктер (>1000 Гц) аз қауіпті, бірақ күйік қаупі сақталады.</p>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warning-icon">!</div>
+    <div>
+      <h4>Маңызды!</h4>
+      <p>Адам үшін қауіпсіз кернеу: <strong>құрғақ үй-жайда — 42 В</strong>, ылғалды және өткізгіш едені бар үй-жайларда — <strong>12 В-тан аспайды</strong>. Зерттеулер бойынша 36 В кернеу ұзақ ұсталғанда да өлімге әкелуі мүмкін.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 3: Room classification -->
+<section class="module reveal" id="rooms">
+  <div class="module-header">
+    <div>
+      <div class="module-num">03 / ТЕОРИЯ</div>
+      <h2 class="module-title">Үй-жайлардың сыныптамасы</h2>
+    </div>
+    <p class="module-intro">
+      ЭҚЕ (Электр қондырғыларын құру ережелері) бойынша барлық үй-жайлар адамды электр тоғымен зақымдану қаупі бойынша үш сыныпқа бөлінеді.
+    </p>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Сынып</th>
+        <th>Сипаттама</th>
+        <th>Шарттар</th>
+        <th>Мысалдар</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:var(--safe)">I сынып</strong><br><span style="font-size:12px;color:var(--text-mute)">Қауіпсіздігі<br>жоғары</span></td>
+        <td>Қауіптілік жоғарылауы жоқ үй-жайлар</td>
+        <td>
+          • Ылғалдық 75% дейін<br>
+          • Температура +30°C дейін<br>
+          • Өткізгіш шаң жоқ<br>
+          • Өткізгіш едендер жоқ
+        </td>
+        <td>Кеңсе, оқу аудиториясы, тұрғын бөлме</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--hazard)">II сынып</strong><br><span style="font-size:12px;color:var(--text-mute)">Қауіптілік<br>жоғары</span></td>
+        <td>Жоғары қауіптілік үй-жайлары</td>
+        <td>
+          • Ылғалдық 75%-дан жоғары<br>
+          • Температура +30°C жоғары<br>
+          • Өткізгіш шаң<br>
+          • Өткізгіш еден (бетон, металл)<br>
+          • Жабдық пен жерлендірілген конструкцияға бір мезгілде жанасу мүмкіндігі
+        </td>
+        <td>Зертхана, шеберхана, қойма, цех, гараж</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--danger)">III сынып</strong><br><span style="font-size:12px;color:var(--text-mute)">Аса<br>қауіпті</span></td>
+        <td>Ерекше қауіпті үй-жайлар</td>
+        <td>
+          • Ылғалдық 100%-ға жуық<br>
+          • Химиялық белсенді орта<br>
+          • II сыныптың 2 және одан көп шарты бір мезгілде<br>
+          • Сыртқы қондырғылар
+        </td>
+        <td>Ауыл шаруашылық қоралары, метал ванналар, шахта, көше</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warning-box">
+    <div class="warning-icon">!</div>
+    <div>
+      <h4>Кернеу шектеуі</h4>
+      <p>
+        <strong>I сыныпта</strong> — 220/380 В жабдық рұқсат етіледі.<br>
+        <strong>II сыныпта</strong> — қосымша қорғаныс шаралары міндетті (УЗО, екі жақты изоляция).<br>
+        <strong>III сыныпта</strong> — тек 12 В немесе 42 В дейінгі кернеу немесе арнайы қорғалған жабдық.
+      </p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-icon">i</div>
+    <div>
+      <h4>Қазақстандағы нормативтер</h4>
+      <p>Қазақстан Республикасында электр қауіпсіздігі мынадай құжаттармен реттеледі: <strong>«Электр қондырғыларын құру ережелері» (ЭҚҚЕ / ПУЭ)</strong>, <strong>«Электр қондырғыларын техникалық пайдалану ережелері (ЭҚТПЕ)»</strong>, <strong>«Тұтынушылардың электр қондырғыларын пайдалану кезіндегі қауіпсіздік ережелері»</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 4: Safety Groups -->
+<section class="module reveal" id="groups">
+  <div class="module-header">
+    <div>
+      <div class="module-num">04 / ТЕОРИЯ</div>
+      <h2 class="module-title">Электр қауіпсіздігі топтары</h2>
+    </div>
+    <p class="module-intro">
+      Электр персоналының білім деңгейі мен жұмысқа жіберілу құқығы 5 топқа бөлінеді. Жұмыстың күрделілігіне қарай белгілі бір топ талап етіледі.
+    </p>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th style="width:60px;">Тобы</th>
+        <th>Категория</th>
+        <th>Талаптар</th>
+        <th>Жұмыс құқығы</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="grp">I</td>
+        <td>Электротехникалық емес персонал</td>
+        <td>Қарапайым нұсқаулықтан өту, журналға қол қою</td>
+        <td>Электр құралын қарапайым пайдалану</td>
+      </tr>
+      <tr>
+        <td class="grp">II</td>
+        <td>Бастаушы электротехникалық персонал</td>
+        <td>Тағылымдамадан өту, теориялық дайындық, медициналық тексеру</td>
+        <td>1000 В дейін жабдыққа қызмет көрсетуге қатысу (өздігінен емес)</td>
+      </tr>
+      <tr>
+        <td class="grp">III</td>
+        <td>Жұмыс орындаушы</td>
+        <td>2 ай II тобында тәжірибе, ОТ бойынша емтихан</td>
+        <td>1000 В дейін өздігінен жұмыс істеу, бригаданың құрамында болу</td>
+      </tr>
+      <tr>
+        <td class="grp">IV</td>
+        <td>Жұмыс өндіруші, оперативтік персонал</td>
+        <td>3-6 ай III тобында тәжірибе, кеңейтілген емтихан</td>
+        <td>1000 В жоғары жабдыққа жіберілу, бригадиршілік</td>
+      </tr>
+      <tr>
+        <td class="grp">V</td>
+        <td>Жоғары білікті маман, рұқсат рәсімдеуші</td>
+        <td>3-24 ай IV тобында тәжірибе, ЭҚЕ толық білу</td>
+        <td>Кез келген кернеудегі қондырғыларда жұмыс істеу, нарядтар беру</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box">
+    <div class="info-icon">i</div>
+    <div>
+      <h4>Тағайындалу шарттары</h4>
+      <ul>
+        <li>Жасы — 18-ден кем емес (II тобынан бастап)</li>
+        <li>Денсаулыққа қарсы көрсеткіштер болмауы</li>
+        <li>Жыл сайын қайта тестілеу міндетті</li>
+        <li>Топ туралы куәлік жұмыс уақытында жанында болуы шарт</li>
+        <li>Жарақат немесе жұмыстан кеткенде топ жойылады</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-icon">✓</div>
+    <div>
+      <h4>Кеңес</h4>
+      <p>Студенттер мен жас мамандар әдетте I-II топпен жұмыс басталады. III топқа жетуге кемінде 2 ай тәжірибе және емтихан табыстау қажет. Әр топ үшін теориялық білім мен практикалық дағдылар талаптары қатаң түрде анықталған.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 5: PPE -->
+<section class="module reveal" id="ppe">
+  <div class="module-header">
+    <div>
+      <div class="module-num">05 / ТЕОРИЯ</div>
+      <h2 class="module-title">Жеке қорғаныс құралдары</h2>
+    </div>
+    <p class="module-intro">
+      ЖҚҚ (СИЗ / ЖҚҚ) — жұмысшыны электр тоғы, доға, ұшатын бөлшектер мен басқа қауіпті факторлардан қорғайтын құралдар. Негізгі (изоляциялаушы) және қосымша болып бөлінеді.
+    </p>
+  </div>
+
+  <span class="sub-h-tag">// 1000 В ДЕЙІНГІ ҚОНДЫРҒЫЛАР ҮШІН</span>
+  <h3 class="sub-h" style="margin-top:8px;">Қорғаныс құралдары</h3>
+
+  <div class="theory-grid">
+    <div class="theory-card">
+      <div class="card-icon">🧤</div>
+      <h3>Диэлектрлік қолғап</h3>
+      <p><strong>Негізгі</strong>. Резеңкеден жасалған. Жұмыс басталар алдында тесіктерге тексеріледі. Сынау мерзімі — 6 ай.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🪛</div>
+      <h3>Изоляциялы құрал</h3>
+      <p><strong>Негізгі</strong>. Бұрауыш, кергіш, плоскогубцы — пластмасса немесе резеңке тұтқалы, 1000 В дейін.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">⚡</div>
+      <h3>Кернеу көрсеткіш</h3>
+      <p><strong>Негізгі</strong>. Тізбекте кернеудің бар-жоғын тексеру үшін. Жұмыс алдында белгілі тоқта тексеру қажет.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">👢</div>
+      <h3>Диэлектрлік галош</h3>
+      <p><strong>Қосымша</strong>. Резеңкеден жасалған. Сынау мерзімі — 12 ай. Күннен сақтап ұстау керек.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🪪</div>
+      <h3>Диэлектрлік төсеніш</h3>
+      <p><strong>Қосымша</strong>. Резеңкеден жасалған, рифленген беті. Жабдық алдына төселеді.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🏗️</div>
+      <h3>Изоляциялы тірек</h3>
+      <p><strong>Қосымша</strong>. Адамды жерден изоляциялау үшін фарфор изоляторларда тұрған ағаш тұғыр.</p>
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// 1000 В ЖОҒАРЫ ҚОНДЫРҒЫЛАР ҮШІН</span>
+  <h3 class="sub-h" style="margin-top:8px;">Қосымша құралдар</h3>
+
+  <div class="theory-grid">
+    <div class="theory-card">
+      <div class="card-icon">🦯</div>
+      <h3>Изоляциялы штанга</h3>
+      <p><strong>Негізгі</strong>. Кернеу астында жұмыс істеуге, ажыратқыштарды қосып-сөндіруге арналған. Сынау — 2 жылда 1 рет.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🔗</div>
+      <h3>Жерге тұйықтағыштар</h3>
+      <p><strong>Негізгі</strong>. Портативті — мыс сым мен зажимдерден тұрады. Кездейсоқ қосылудан қорғайды.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">⛑️</div>
+      <h3>Қорғаныс касқасы</h3>
+      <p><strong>Қосымша</strong>. Электр изоляциялы материалдан жасалған. Соққыдан, ұшқыннан қорғайды.</p>
+    </div>
+    <div class="theory-card">
+      <div class="card-icon">🥽</div>
+      <h3>Қорғаныс көзілдірігі / қалқаны</h3>
+      <p><strong>Қосымша</strong>. Электр доғасынан, ұшқыннан, металл бөлшектерінен қорғайды.</p>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <div class="info-icon">i</div>
+    <div>
+      <h4>Негізгі мен қосымша құралдардың айырмашылығы</h4>
+      <p><strong>Негізгі ҚҚК</strong> — изоляциясы кернеу астында жұмыс істеуге сенімді шыдайды, тірі бөліктерге жанасуға рұқсат береді.</p>
+      <p style="margin-top:8px;"><strong>Қосымша ҚҚК</strong> — өздігінен жеткіліксіз, тек негізгімен бірге қолданылады. Қадам кернеуінен, жанамалы ток әсерінен қосымша қорғайды.</p>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warning-icon">!</div>
+    <div>
+      <h4>Сынау мерзімдерін бұзуға тыйым</h4>
+      <p>Әр ҚҚК-да сынау таңбасы (штамп) болуы керек: сыналған күн және келесі сынау мерзімі. Мерзімі өткен немесе таңбасы жоқ құралды қолдануға қатаң тыйым салынады.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 6: Signs -->
+<section class="module reveal" id="signs">
+  <div class="module-header">
+    <div>
+      <div class="module-num">06 / ТЕОРИЯ</div>
+      <h2 class="module-title">Қауіпсіздік белгілері және плакаттары</h2>
+    </div>
+    <p class="module-intro">
+      Электр қондырғыларында 4 түрлі ескерту белгілері мен плакаттары қолданылады. Олардың түсі мен формасы белгілі бір мағынаны білдіреді.
+    </p>
+  </div>
+
+  <div class="signs-grid">
+    <div class="sign-card prohibit">
+      <div class="sign-visual">⊘</div>
+      <div class="sign-type">// ТЫЙЫМ САЛУШЫ</div>
+      <h4>Қосуға тыйым</h4>
+      <p>«Қосуға тыйым салынады — адамдар жұмыс істеп жатыр». Ажыратқыштарға ілінеді.</p>
+    </div>
+    <div class="sign-card warn">
+      <div class="sign-visual"><span>⚡</span></div>
+      <div class="sign-type">// САҚТАНДЫРУШЫ</div>
+      <h4>Кернеу астында</h4>
+      <p>«Сақтан — өмірге қауіпті». Жұмыс орнының жанындағы тірі қондырғыларға.</p>
+    </div>
+    <div class="sign-card prescribe">
+      <div class="sign-visual">⚙</div>
+      <div class="sign-type">// ҰСЫНУШЫ</div>
+      <h4>Мұнда жұмыс</h4>
+      <p>«Мұнда жұмыс істеу». Жұмыс орнының өзіне ілінеді — жұмыс алаңын белгілейді.</p>
+    </div>
+    <div class="sign-card point">
+      <div class="sign-visual">⏚</div>
+      <div class="sign-type">// НҰСҚАУШЫ</div>
+      <h4>Жерге қосылған</h4>
+      <p>«Жерге қосылған». Жерге қосылған ажыратқыш жетектерін белгілеу үшін.</p>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Топ</th>
+        <th>Түсі / формасы</th>
+        <th>Қолданылуы</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:var(--danger)">Тыйым салушы</strong></td>
+        <td>Ақ фон, қызыл айналма, қара мәтін</td>
+        <td>Кернеу беруге, ажыратқышты қосуға тыйым салынатын жерлерде</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--hazard)">Сақтандырушы</strong></td>
+        <td>Сары үшбұрыш, қара кескін</td>
+        <td>Кернеу астындағы аймақтарда, қауіпті жерлерде</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--info)">Ұсынушы (бұйырушы)</strong></td>
+        <td>Көк фон, ақ кескін</td>
+        <td>Жұмыс орнын, рұқсат етілген әрекеттерді белгілеу үшін</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--safe)">Нұсқаушы</strong></td>
+        <td>Жасыл фон, ақ мәтін</td>
+        <td>Жерге қосылған бөліктерді, эвакуация жолдарын белгілеу үшін</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- MODULE 7: Rules -->
+<section class="module reveal" id="rules">
+  <div class="module-header">
+    <div>
+      <div class="module-num">07 / ЕРЕЖЕЛЕР</div>
+      <h2 class="module-title">Жұмыс ережелері</h2>
+    </div>
+    <p class="module-intro">
+      Электр қондырғыларында жұмыс істеу кезінде орындалуы тиіс міндетті ұйымдастырушылық және техникалық шаралар.
+    </p>
+  </div>
+
+  <span class="sub-h-tag">// ҰЙЫМДАСТЫРУШЫЛЫҚ ШАРАЛАР</span>
+  <h3 class="sub-h" style="margin-top:8px;">Алдын-ала рәсімдеу</h3>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">01</span>
+        <span>Наряд-рұқсат рәсімдеу</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Күрделі жұмыстар үшін екі данада жазбаша құжат — наряд-рұқсат толтырылады. Онда жұмыс мазмұны, орны, мерзімі, бригада құрамы, жетекші көрсетіледі. Наряд 5 күннен аспауы тиіс.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">02</span>
+        <span>Жұмыс жетекшісі мен бригаданы тағайындау</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Жұмыс жетекшісі — IV не V тобы бар маман. Бригадада кемінде 2 адам. Жетекші жұмыстың дұрыс және қауіпсіз орындалуы үшін жауапты.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">03</span>
+        <span>Жұмыс орнында мақсатты нұсқаулықтан өту</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Жұмысқа жіберуші бригадаға нақты жұмыс мазмұны, қауіптер, қорғаныс шаралары туралы нұсқау береді. Бригаданың әр мүшесі журналға қол қояды.
+      </div></div>
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// ТЕХНИКАЛЫҚ ШАРАЛАР</span>
+  <h3 class="sub-h" style="margin-top:8px;">Жұмыс орнын дайындау</h3>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">04</span>
+        <span>Жабдықты қоректен ажырату</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Жабдыққа кернеу беретін барлық тарапты ажырату. Ажыратқыштарды өшіріп, олардың кездейсоқ қосылмауы үшін ілгек қою және ескерту белгілерін ілу керек.
+        <ul>
+          <li>1000 В дейін — кемінде бір ажыратқыш</li>
+          <li>1000 В жоғары — көрнекі үзу (рассеч) бар ажыратушылар</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">05</span>
+        <span>Кездейсоқ қосылудан қорғау</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Ажыратушылардың жетектерінде ілгек, құлып орнатылады. Сақтандырғыштар алынады. Тыйым салушы плакат ілінеді: «Қосуға тыйым салынады — адамдар жұмыс істеп жатыр».
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">06</span>
+        <span>Кернеудің жоқтығын тексеру</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Барлық фазаларда кернеудің болмауын кернеу көрсеткішпен тексеру міндетті. Аспапты алдымен белгілі тірі жерде сынап, оның жұмыс істейтінін растау керек. Тексеруден кейін аспапты қайта тексеру.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">07</span>
+        <span>Жерге қосу — портативті жерге тұйықтағыш</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Алдымен жерге қосу қыспағы жерге, содан кейін фазалар сымдарына қосылады. Шешу — кері тәртіппен. 1000 В жоғары қондырғыларда міндетті, 1000 В дейін — қажет жағдайда.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">08</span>
+        <span>Қоршау және ескерту белгілерін орнату</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Жұмыс орнын қоршаулармен (қалқан, шнур, лента) бөлу. Қоршауда «Тоқтата тұр — өмірге қауіпті» плакаты. Жұмыс орнының өзіне «Мұнда жұмыс істеу» плакаты ілінеді.
+      </div></div>
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// ЖҰМЫС БАРЫСЫНДА</span>
+  <h3 class="sub-h" style="margin-top:8px;">Жұмыс істеу кезіндегі ережелер</h3>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">09</span>
+        <span>Жалғыз жұмыс істеуге тыйым</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Электр қондырғыларында жұмыс кемінде <strong>екі адаммен</strong> жүргізіледі. Бір адам — жұмыс жетекшісі (бақылаушы), екінші — орындаушы. Апаттық жағдайда бір-біріне көмек көрсету үшін.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">10</span>
+        <span>Жеке қорғаныс құралдарын пайдалану</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Кернеу астында немесе оған жақын жерде барлық жұмыстар тек ҚҚК-да жүргізіледі. Әр құралда жарамдылық мерзімінің таңбасы (штамп) болуы керек. Қолғаптар жұмыс алдында тесіктерге тексеріледі (ауаны қолғаппен қамту арқылы).
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">11</span>
+        <span>Кернеу астындағы бөліктерге жақындау</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Қондырғы кернеуіне сәйкес минималды қашықтықты сақтау керек:
+        <ul>
+          <li>1 кВ дейін — жанасуға жол жоқ</li>
+          <li>1-35 кВ — 0,6 м-ден жақын емес</li>
+          <li>110 кВ — 1 м</li>
+          <li>220 кВ — 2 м</li>
+          <li>500 кВ — 3,5 м</li>
+        </ul>
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">12</span>
+        <span>Ылғалды ортада жұмыс</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Ылғалды үй-жайларда тек 12 В дейінгі төмен кернеулі жабдықты пайдалануға болады. Жұп қол, дымқыл киім немесе дымқыл аяқ киіммен электр құрылғыларына тиюге болмайды. Қажет жағдайда жұмысты тоқтатып, ортаны кептіру керек.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">13</span>
+        <span>Жұмыстағы үзіліс кезіндегі тәртіп</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Жұмыс кезіндегі үзіліс (түскі ас, ауысым ауысуы) жағдайында бригада жұмыс орнынан шығады, ал жетекші наряд-рұқсатты сақтайды. Қайта кірмес бұрын кернеудің жоқтығын қайтадан тексеру керек.
+      </div></div>
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// ЖҰМЫСТЫ АЯҚТАУ</span>
+  <h3 class="sub-h" style="margin-top:8px;">Қондырғыны қалпына келтіру</h3>
+
+  <div class="accordion">
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">14</span>
+        <span>Жұмыс орнын тазарту және адамдарды шығару</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Барлық құрал-жабдықты, материалдарды жинау. Бригаданың барлық мүшелерін жұмыс орнынан шығару. Жетекші орынды тексеру.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">15</span>
+        <span>Жерге қосуды алу, қоршауды жинау</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Портативті жерге тұйықтағышты алу: алдымен фазалардан, содан кейін жерден. Қоршауларды жинау. Тыйым салушы плакаттарды алу.
+      </div></div>
+    </div>
+
+    <div class="acc-item">
+      <button class="acc-head">
+        <span class="acc-num">16</span>
+        <span>Кернеу беру және жұмысты аяқтау</span>
+        <span class="arrow">+</span>
+      </button>
+      <div class="acc-body"><div class="acc-body-inner">
+        Жетекші наряд-рұқсатты жабу туралы рапорт береді. Диспетчер кернеу беруге рұқсат береді. Жабдықты сатылы түрде қайтадан қосу: алдымен төменгі кернеу тарапынан.
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULE 8: First Aid -->
+<section class="module reveal" id="firstaid">
+  <div class="module-header">
+    <div>
+      <div class="module-num">08 / МЕДИЦИНА</div>
+      <h2 class="module-title">Алғашқы медициналық көмек</h2>
+    </div>
+    <p class="module-intro">
+      Электр тоғымен зақымданған адамға дұрыс және жылдам көмек көрсету оның өмірін сақтап қалуы мүмкін. Әр секунд маңызды.
+    </p>
+  </div>
+
+  <div class="warning-box">
+    <div class="warning-icon">!</div>
+    <div>
+      <h4>«Алтын минут» ережесі</h4>
+      <p>Жүрек тоқтағаннан кейінгі алғашқы 4-5 минут ішінде ағза қалпына келтірілмесе, ми жасушалары жойыла бастайды. Оқиғадан кейінгі 1 минут ішінде басталған реанимация — өмірді сақтап қалу мүмкіндігін 90%-ға дейін көтереді.</p>
+    </div>
+  </div>
+
+  <span class="sub-h-tag">// ӘРЕКЕТ ТӘРТІБІ</span>
+  <h3 class="sub-h" style="margin-top:8px;">Көмек көрсетудің кезеңдері</h3>
+
+  <div class="aid-steps">
+    <div class="aid-step">
+      <div>
+        <h4>Зардап шегушіні токтан ажырату</h4>
+        <p>Ең бірінші — токты ажырату. Ажыратқышты сөндіру немесе сақтандырғышты алу. Бұл мүмкін болмаса, зардап шегушіні құрғақ ағаш таяқпен, киіммен немесе изоляциялы заттың көмегімен токтан шығару. Өзіңіз де изоляцияланған болуыңыз керек (резеңке аяқ киім, құрғақ киім).</p>
+      </div>
+    </div>
+
+    <div class="aid-step">
+      <div>
+        <h4>Жағдайды бағалау</h4>
+        <p>Зардап шегушінің есі анық па? Тыныс алуы бар ма? Тамырсоғуы (сонная артерия) сезіледі ме? Терісі қандай түсте? Бұл сұрақтарға жауап беріп, көмектің көлемін анықтаңыз.</p>
+      </div>
+    </div>
+
+    <div class="aid-step">
+      <div>
+        <h4>«Жедел жәрдемге» қоңырау шалу</h4>
+        <p>Дереу <strong>103</strong> (немесе 112) нөміріне қоңырау шалу. Оқиға орнын, зардап шегушінің жағдайын, жасын, жыныс анық хабарлау. Маман келгенше байланыста болу.</p>
+      </div>
+    </div>
+
+    <div class="aid-step">
+      <div>
+        <h4>Реанимация (қажет болса)</h4>
+        <p>Тыныс алу мен тамырсоғу болмаса — дереу <strong>жабық жүрек массажы</strong> мен <strong>жасанды тыныс беруді</strong> бастаңыз. Ритм: 30 қысу — 2 ауа беру. Қысу тереңдігі: 5-6 см, жиілік: 100-120 рет/мин. Маман келгенше тоқтатпаңыз.</p>
+      </div>
+    </div>
+
+    <div class="aid-step">
+      <div>
+        <h4>Естен танған бірақ тыныс алатын зардап шегушіге</h4>
+        <p>Бүйір қалпында жатқызу (қауіпсіз қалып). Бас сәл артқа жатқызылады, ауыз ашық қалпында болады — рефлюкстен тұншықпауы үшін. Ыстық киіммен жабу, тыныш ұстау. Үнемі бақылау.</p>
+      </div>
+    </div>
+
+    <div class="aid-step">
+      <div>
+        <h4>Күйіктерді өңдеу</h4>
+        <p>Күйікті қол тигізбеу. Суық сумен 10-15 минут шаю. Стерильді таңғышпен жабу. Май, крем, тіс пастасы жағуға, көпіршіктерді жаруға қатаң тыйым. Ауыр күйіктерде дәрігерге жеткізу.</p>
+      </div>
+    </div>
+
+    <div class="aid-step">
+      <div>
+        <h4>Дәрігер келгенше бақылау</h4>
+        <p>Зардап шегушіні жалғыз қалдырмау. Тыныс пен тамырсоғу үнемі қадағаланады. Жағдай нашарласа — қайтадан реанимациялау. Барлық оқиғаны (уақыт, әрекеттер) дәрігерге толық хабарлау.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="warning-box">
+    <div class="warning-icon">!</div>
+    <div>
+      <h4>ҚАТАҢ ТЫЙЫМ САЛЫНАДЫ</h4>
+      <ul>
+        <li>Зардап шегушіні жерге көму (бұрынғы аңыз — қателік, мүмкін болатын ең қауіпті әрекет)</li>
+        <li>Зардап шегушіге су беру (ес жоғалған кезде тұншығу қаупі)</li>
+        <li>Реанимацияны 5 минут жасап тоқтату — маман келгенше жалғастыру</li>
+        <li>Зардап шегушінің денесін сілку немесе айқайлап ояту</li>
+        <li>Күйікке жабысқан киімді алу</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <div class="tip-icon">+</div>
+    <div>
+      <h4>Маңызды телефон нөмірлері (Қазақстан)</h4>
+      <p>
+        <strong>103</strong> — Жедел медициналық жәрдем<br>
+        <strong>101</strong> — Өрт сөндіру қызметі<br>
+        <strong>102</strong> — Полиция<br>
+        <strong>112</strong> — Бірыңғай шұғыл қызмет нөмірі
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- PRACTICE -->
+<section class="module reveal" id="practice">
+  <div class="module-header">
+    <div>
+      <div class="module-num">09 / ПРАКТИКА</div>
+      <h2 class="module-title">Интерактивті жаттығулар</h2>
+    </div>
+    <p class="module-intro">
+      Алған білімді тәжірибеде қолданып көріңіз. 5 жаттығуды орындап, теориядан қорытынды тестке дайындалыңыз.
+    </p>
+  </div>
+
+  <!-- Practice 1 -->
+  <div class="practice-area">
+    <h3>🔧 Жаттығу 1 · Шамды дұрыс ретпен қосу</h3>
+    <p class="practice-desc">Электр шамын дұрыс қосыңыз: алдымен жабдықтың түзіктігіне көз жеткізіңіз, содан кейін ажыратқышты қосыңыз.</p>
+
+    <div class="scene">
+      <div class="scene-status" id="lampStatus">// СТАТУС: ТОҚ ӨШІРУЛІ · ШАМ ӨШІК</div>
+      <div class="switch-demo">
+        <div class="switch" id="switchEl">
+          <div class="switch-handle"></div>
+          <div class="switch-label" id="switchLabel">OFF</div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace;color:var(--text-mute);">─── электр желісі ───</div>
+        <div class="lamp" id="lampEl"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn secondary" id="checkBtn">1. Аспапты тексеру</button>
+      <button class="btn" id="toggleBtn" disabled>2. Қосу / өшіру</button>
+    </div>
+
+    <div class="feedback" id="lampFeedback"></div>
+  </div>
+
+  <!-- Practice 2: PPE -->
+  <div class="practice-area">
+    <h3>🧤 Жаттығу 2 · Қорғаныс құралдарын таңдау</h3>
+    <p class="practice-desc">Жоғары кернеулі қондырғыда жұмыс істеу үшін қажетті жеке қорғаныс құралдарын таңдаңыз (бірнеше нұсқа).</p>
+
+    <div class="ppe-list" id="ppeList">
+      <div class="ppe-item" data-correct="true"><div class="ppe-icon">🧤</div><div class="ppe-name">Диэлектрлік қолғап</div></div>
+      <div class="ppe-item" data-correct="true"><div class="ppe-icon">👢</div><div class="ppe-name">Диэлектрлік боты</div></div>
+      <div class="ppe-item" data-correct="false"><div class="ppe-icon">🧢</div><div class="ppe-name">Жұмыс кепкасы</div></div>
+      <div class="ppe-item" data-correct="true"><div class="ppe-icon">⛑️</div><div class="ppe-name">Қорғаныс касқасы</div></div>
+      <div class="ppe-item" data-correct="false"><div class="ppe-icon">🧦</div><div class="ppe-name">Жай шұлық</div></div>
+      <div class="ppe-item" data-correct="true"><div class="ppe-icon">🥽</div><div class="ppe-name">Қорғаныс көзілдірігі</div></div>
+      <div class="ppe-item" data-correct="false"><div class="ppe-icon">👕</div><div class="ppe-name">Мақта көйлек</div></div>
+      <div class="ppe-item" data-correct="true"><div class="ppe-icon">🪛</div><div class="ppe-name">Изоляциялы құрал</div></div>
+    </div>
+
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" id="ppeCheckBtn">Жауапты тексеру</button>
+      <button class="btn secondary" id="ppeResetBtn">Қайта бастау</button>
+    </div>
+    <div class="feedback" id="ppeFeedback"></div>
+  </div>
+
+  <!-- Practice 3: Sequence -->
+  <div class="practice-area">
+    <h3>📋 Жаттығу 3 · Жұмыс кезеңдерін ретімен қою</h3>
+    <p class="practice-desc">Электр қондырғысында жұмыс істеудің дұрыс ретін орналастырыңыз. Элементтерді тінтуірмен сүйреңіз.</p>
+
+    <div class="sequence-task" id="seqTask"></div>
+
+    <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn" id="seqCheckBtn">Реттілікті тексеру</button>
+      <button class="btn secondary" id="seqResetBtn">Араластыру</button>
+    </div>
+    <div class="feedback" id="seqFeedback"></div>
+  </div>
+
+  <!-- Practice 4: Match -->
+  <div class="practice-area">
+    <h3>🔗 Жаттығу 4 · Топ пен сипаттаманы сәйкестендіру</h3>
+    <p class="practice-desc">Сол жақтан электр қауіпсіздік тобын, оң жақтан оның сипаттамасын таңдап, жұптарды сәйкестендіріңіз.</p>
+
+    <div class="match-task">
+      <div class="match-col">
+        <h4>// Тобы</h4>
+        <div id="matchLeft">
+          <div class="match-item" data-id="g1">I топ</div>
+          <div class="match-item" data-id="g2">II топ</div>
+          <div class="match-item" data-id="g3">III топ</div>
+          <div class="match-item" data-id="g4">IV топ</div>
+          <div class="match-item" data-id="g5">V топ</div>
         </div>
       </div>
-    </section>
-
-    <!-- О ТУРНИРЕ / ФОРМАТ -->
-    <section id="about">
-      <div class="container">
-        <div class="panel reveal">
-          <div class="panel-header-tag">OVERVIEW</div>
-          <h2 class="heading-main">ФОРМАТ ТУРНИРА</h2>
-          <div class="divider"></div>
-
-          <div class="about-grid">
-            <div class="text-main">
-              Турнир создан для развития командной работы, стратегического мышления
-              и киберспортивной культуры в университете. Участникам гарантируются
-              честные условия, прозрачная сетка и понятный регламент.
-            </div>
-            <ul class="about-list">
-              <li><span class="accent-blue">Дата турнира:</span> 22 декабря 2025 года</li>
-              <li><span class="accent-blue">Формат:</span> 5 основных игроков + до 2 запасных</li>
-              <li><span class="accent-blue">Этапы:</span> групповой этап BO1 → плей-офф BO3 / BO5</li>
-              <li><span class="accent-blue">Платформа:</span> официальные сервера Mobile Legends: Bang Bang</li>
-              <li><span class="accent-blue">Регистрация:</span> до 20 декабря 2025 года (23:59)</li>
-            </ul>
-          </div>
+      <div class="match-col">
+        <h4>// Сипаттама</h4>
+        <div id="matchRight">
+          <!-- shuffled by JS -->
         </div>
       </div>
-    </section>
+    </div>
+    <div class="feedback" id="matchFeedback" style="margin-top:16px;"></div>
+  </div>
 
-    <!-- ПРАВИЛА -->
-    <section id="rules">
-      <div class="container">
-        <div class="panel reveal">
-          <div class="panel-header-tag">RULES</div>
-          <h2 class="heading-main">РЕГЛАМЕНТ ТУРНИРА</h2>
-          <div class="divider"></div>
+  <!-- Practice 5: Scenario -->
+  <div class="practice-area">
+    <h3>🎬 Жаттығу 5 · Апаттық жағдайдағы әрекет</h3>
+    <p class="practice-desc">Әр сценарийде дұрыс әрекетті таңдаңыз. Бұл — нақты өмірдегі шешім қабылдау практикасы.</p>
 
-          <div class="rules-accordion" id="rules-accordion">
-            <!-- 1 -->
-            <div class="rule-item open">
-              <div class="rule-header">
-                <div class="rule-title">1. ОБЩИЕ ПОЛОЖЕНИЯ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>1.1.</strong> Полное название турнира: <strong>ITF POWER LEAGUE — Кубок ИТФ по Mobile Legends: Bang Bang 2025</strong>.</p>
-                  <p><strong>1.2.</strong> Организатор — <strong>Кафедра энергетики и электротехники</strong> факультета инженерные технологии (ИТФ).</p>
-                  <p><strong>1.3.</strong> Дисциплина: <strong>Mobile Legends: Bang Bang (MLBB)</strong>, актуальная версия клиента.</p>
-                  <p><strong>1.4.</strong> Формат: оффлайн-турнир.</p>
-                  <p><strong>1.5.</strong> Дата основных матчей: <strong>22 декабря 2025 года</strong>. Расписание публикуется в официальном канале турнира.</p>
-                  <p><strong>1.6.</strong> Рабочий язык турнира — полиязычный.</p>
-                </div>
-              </div>
-            </div>
+    <div id="scenarioContainer"></div>
+  </div>
+</section>
 
-            <!-- 2 -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">2. УЧАСТНИКИ И СОСТАВ КОМАНДЫ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>2.1.</strong> Состав команды: 5 основных игроков и до 2 запасных (максимум 7 человек).</p>
-                  <p><strong>2.2.</strong> К участию допускаются студенты КазНАИУ (в приоритете — студенты ИТФ). Один игрок может выступать только за одну команду.</p>
-                  <p><strong>2.3.</strong> Регистрация до <strong>20 декабря 2025 года (23:59)</strong> через онлайн-форму. В заявке указываются:</p>
-                  <ul>
-                    <li>название команды;</li>
-                    <li>ФИО, никнеймы и ID аккаунтов MLBB всех игроков (основных и запасных);</li>
-                    <li>контакты капитана (WhatsApp / Telegram).</li>
-                  </ul>
-                  <p><strong>2.4.</strong> Название команды не должно содержать оскорблений, нецензурной лексики, дискриминации и политических лозунгов. Организаторы могут потребовать изменить название.</p>
-                  <p><strong>2.5.</strong> Замены после окончания регистрации возможны только до старта стадии плей-офф и только на заранее заявленных запасных, с согласия администрации.</p>
-                </div>
-              </div>
-            </div>
+<!-- TEST -->
+<section class="module reveal" id="test">
+  <div class="module-header">
+    <div>
+      <div class="module-num">10 / ҚОРЫТЫНДЫ ТЕСТ</div>
+      <h2 class="module-title">Білімді тексеру</h2>
+    </div>
+    <p class="module-intro">
+      25 сұрақтан тұратын кешенді тест. Әр сұраққа бір ғана дұрыс жауап бар. Тестті аяқтағаннан кейін толық нәтижеңізді көресіз.
+    </p>
+  </div>
 
-            <!-- 3 -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">3. СТРУКТУРА ТУРНИРА</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>3.1. Групповой этап.</strong></p>
-                  <ul>
-                    <li>Команды делятся на группы по 4 (формат может корректироваться).</li>
-                    <li>Система — каждый с каждым (Round Robin).</li>
-                    <li>Формат матчей — BO1 (до одной победы).</li>
-                    <li>Победа — 1 очко, поражение — 0 очков.</li>
-                    <li>В плей-офф выходят 2 лучшие команды из каждой группы.</li>
-                  </ul>
-                  <p><strong>Критерии распределения мест:</strong></p>
-                  <ul>
-                    <li>общее количество очков;</li>
-                    <li>результат личной встречи между командами;</li>
-                    <li>при нескольких командах с равными показателями — мини-таблица или переигровки по решению администрации.</li>
-                  </ul>
-                  <p><strong>3.2. Плей-офф.</strong> Олимпийская система (проигравший выбывает).</p>
-                  <ul>
-                    <li>четвертьфиналы — BO3 (до 2 побед);</li>
-                    <li>полуфиналы — BO3;</li>
-                    <li>матч за 3-е место — BO3;</li>
-                    <li>гранд-финал — BO5 (до 3 побед).</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
+  <div class="test-container">
+    <div id="testBody"></div>
+  </div>
+</section>
 
-            <!-- 4 -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">4. ПРОВЕДЕНИЕ МАТЧА</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>4.1.</strong> Все игры проходят на официальных серверах MLBB на актуальной версии клиента.</p>
-                  <p><strong>4.2.</strong> Лобби создаёт капитан команды, указанной первой в расписании (или администратор), и приглашает соперника.</p>
-                  <p><strong>4.3.</strong> Настройки комнаты: Custom → Draft Pick, стандартная карта 5×5, зрители — только администраторы/наблюдатели.</p>
-                  <p><strong>4.4.</strong> Команды обязаны убедиться, что в лобби только зарегистрированные игроки.</p>
-                  <p><strong>4.5.</strong> Драфт проводится в режиме Draft Pick. Запрещённые герои объявляются отдельно; их выбор считается нарушением.</p>
-                  <p><strong>4.6.</strong> Матч считается начатым после завершения драфта и загрузки всех игроков на карту.</p>
-                  <p><strong>4.7. Рестарт.</strong> Возможен только если:</p>
-                  <ul>
-                    <li>в первые 30 секунд произошёл массовый технический сбой (массовый дисконнект, серьёзный лаг);</li>
-                    <li>один из игроков не подключился к игре (есть скриншот/видео).</li>
-                  </ul>
-                  <p>Команда ставит паузу и связывается с администратором. Решение о рестарте принимает администрация.</p>
-                  <p><strong>4.8. Паузы.</strong> Каждая команда может использовать паузы суммарной длительностью до 5 минут за матч. Паузы допускаются по уважительной причине и согласуются с администратором.</p>
-                  <p><strong>4.9. Опоздание.</strong> Допустимое опоздание — до 10 минут. Если команда не готова выставить 5 игроков в этот срок, возможно техническое поражение.</p>
-                </div>
-              </div>
-            </div>
+<footer>
+  <div>// САБАҚ АЯҚТАЛДЫ · СӘТТІЛІК ТІЛЕЙМІЗ ·</div>
+  <div style="margin-top:8px;">Энергетика және электротехника кафедрасы · 2 сағ. интерактивті курс</div>
+</footer>
 
-            <!-- 5 -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">5. ПРАВИЛА ПОВЕДЕНИЯ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>5.1. Fair Play.</strong> Запрещены читы, скрипты, модифицированные клиенты, использование багов и любое ПО, дающее нечестное преимущество, а также договорные матчи.</p>
-                  <p><strong>5.2. Общение.</strong> Запрещены оскорбления, угрозы, токсичность, троллинг и любая форма дискриминации в игре и официальных каналах турнира.</p>
-                  <p><strong>5.3. Саботаж.</strong> Запрещены Intentional Feeding, намеренное бездействие, искусственное затягивание матча и помощь сопернику.</p>
-                  <p><strong>5.4. Санкции.</strong> Возможны: предупреждение, пересмотр результата, техническое поражение, дисквалификация игрока или команды, запрет на участие в следующих турнирах.</p>
-                </div>
-              </div>
-            </div>
+<script>
+/* Reveal */
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.05 });
+reveals.forEach(r => io.observe(r));
 
-            <!-- 6 -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">6. СПОРЫ И СВЯЗЬ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>6.1.</strong> Спорные ситуации решаются администрацией турнира, её решение окончательно.</p>
-                  <p><strong>6.2.</strong> При подаче жалобы команда обязана предоставить доказательства: скриншоты, видеозаписи, реплеи матчей.</p>
-                  <p><strong>6.3.</strong> Единственный официальный представитель команды — капитан. Он ведёт коммуникацию с администрацией.</p>
-                  <p><strong>6.4.</strong> Официальный канал связи (Discord / Telegram) будет сообщён капитанам. Ответственность за ознакомление с объявлениями несёт капитан.</p>
-                </div>
-              </div>
-            </div>
+/* Progress bar */
+const progressFill = document.getElementById('progressFill');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+  progressFill.style.width = pct + '%';
+});
 
-            <!-- 7 -->
-            <div class="rule-item">
-              <div class="rule-header">
-                <div class="rule-title">7. ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ</div>
-                <div class="rule-toggle">▾</div>
-              </div>
-              <div class="rule-content">
-                <div class="rule-content-inner">
-                  <p><strong>7.1.</strong> Организаторы могут корректировать регламент при форс-мажоре с обязательным уведомлением капитанов.</p>
-                  <p><strong>7.2.</strong> В неописанных ситуациях решение принимает администрация турнира, руководствуясь здравым смыслом и принципами честной игры.</p>
-                </div>
-              </div>
-            </div>
+/* Accordion */
+document.querySelectorAll('.acc-head').forEach(head => {
+  head.addEventListener('click', () => {
+    head.parentElement.classList.toggle('open');
+  });
+});
 
-          </div>
-        </div>
-      </div>
-    </section>
+/* ===== Practice 1: lamp ===== */
+const switchEl = document.getElementById('switchEl');
+const lampEl = document.getElementById('lampEl');
+const switchLabel = document.getElementById('switchLabel');
+const lampStatus = document.getElementById('lampStatus');
+const checkBtn = document.getElementById('checkBtn');
+const toggleBtn = document.getElementById('toggleBtn');
+const lampFeedback = document.getElementById('lampFeedback');
+let checked = false;
+let lampOn = false;
 
-    <!-- ПРИЗЫ -->
-    <section id="prizes">
-      <div class="container">
-        <div class="panel reveal">
-          <div class="panel-header-tag">PRIZES</div>
-          <h2 class="heading-main">ПРИЗЫ</h2>
-          <div class="divider"></div>
+checkBtn.addEventListener('click', () => {
+  checked = true;
+  lampStatus.textContent = '// СТАТУС: ТЕКСЕРІЛДІ · ЖАБДЫҚ ҚАУІПСІЗ';
+  lampStatus.className = 'scene-status safe';
+  toggleBtn.disabled = false;
+  checkBtn.disabled = true;
+  lampFeedback.textContent = '✓ Жарайсыз! Жабдықты тексергеннен кейін ғана оны қосуға болады.';
+  lampFeedback.className = 'feedback show correct';
+});
 
-          <div class="prizes-grid">
-            <div class="prize-card">
-              <img src="prize1.png" alt="Кубок за 1 место" class="prize-image" />
-              <div class="prize-title yellow">ЗА 1-Е МЕСТО</div>
-              <div class="prize-text">
-                Денежный приз и официальный статус сильнейшей команды MLBB факультета.
-              </div>
-            </div>
+toggleBtn.addEventListener('click', () => {
+  if (!checked) return;
+  lampOn = !lampOn;
+  switchEl.classList.toggle('on', lampOn);
+  lampEl.classList.toggle('on', lampOn);
+  switchLabel.textContent = lampOn ? 'ON' : 'OFF';
+  lampStatus.textContent = lampOn
+    ? '// СТАТУС: ТОҚ ҚОСУЛЫ · ШАМ ЖАНЫП ТҰР'
+    : '// СТАТУС: ТОҚ ӨШІРУЛІ · ШАМ ӨШІК';
+  lampStatus.className = lampOn ? 'scene-status' : 'scene-status safe';
+});
 
-            <div class="prize-card">
-              <img src="prize2.png" alt="Награда за 2 и 3 место" class="prize-image" />
-              <div class="prize-title blue">ЗА 2-Е И 3-Е МЕСТО</div>
-              <div class="prize-text">
-                Официальный респект от декана факультета, именные сертификаты
-                участников и подтверждение достижений команды в турнире.
-              </div>
-            </div>
-          </div>
+/* ===== Practice 2: PPE ===== */
+const ppeItems = document.querySelectorAll('#ppeList .ppe-item');
+const ppeCheckBtn = document.getElementById('ppeCheckBtn');
+const ppeResetBtn = document.getElementById('ppeResetBtn');
+const ppeFeedback = document.getElementById('ppeFeedback');
 
-          <div class="prizes-extra">
-            Дополнительно участников ждут памятные призы, медиа-освещение результатов
-            и возможность заявить о себе в киберспортивном сообществе университета.
-          </div>
-        </div>
-      </div>
-    </section>
+ppeItems.forEach(item => {
+  item.addEventListener('click', () => {
+    if (item.classList.contains('locked')) return;
+    item.classList.toggle('selected');
+    item.classList.remove('wrong');
+  });
+});
 
-    <!-- РЕГИСТРАЦИЯ -->
-    <section id="signup">
-      <div class="container">
-        <div class="panel reveal">
-          <div class="signup-grid">
-            <div>
-              <img src="logo.png" alt="MLBB KazNARU" class="signup-logo" />
-              <div class="panel-header-tag">REGISTRATION</div>
-              <h2 class="heading-main">ОСТАВИТЬ ЗАЯВКУ</h2>
-              <div class="divider"></div>
-              <div class="signup-text">
-                Форма заполняется капитаном команды. Указывайте реальные контакты
-                и корректные данные. После проверки заявки организаторы свяжутся
-                с вами в мессенджере.
-              </div>
-            </div>
-
-            <div>
-              <form id="mlbb-form" action="https://api.web3forms.com/submit" method="POST">
-                <!-- Web3Forms -->
-                <input type="hidden" name="access_key" value="c2bc2f04-f440-4027-b6e0-47c61fd3a914" />
-                <input type="hidden" name="subject" value="Заявка на турнир MLBB" />
-                <input type="hidden" name="from_name" value="MLBB KazNARU" />
-
-                <div class="form-row">
-                  <label for="team">Название команды <span class="req">(обязательно)</span></label>
-                  <input type="text" id="team" name="team_name" required />
-                </div>
-
-                <div class="form-row">
-                  <label for="group">Группа / Кафедра <span class="req">(обязательно)</span></label>
-                  <input type="text" id="group" name="group" required />
-                </div>
-
-                <div class="form-row">
-                  <label for="contact">Контакты капитана (WhatsApp / Telegram) <span class="req">(обязательно)</span></label>
-                  <input type="text" id="contact" name="captain_contact" required />
-                </div>
-
-                <div class="form-row">
-                  <label for="players">ФИО участников <span class="req">(обязательно)</span></label>
-                  <textarea id="players" name="players" required></textarea>
-                </div>
-
-                <button type="submit">ОТПРАВИТЬ ЗАЯВКУ</button>
-                <div id="form-status" class="form-status"></div>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    MLBB · ITF POWER LEAGUE · КазНАИУ · 2025
-  </footer>
-
-  <script>
-    // NAV toggle (мобилки)
-    const navToggle = document.getElementById('nav-toggle');
-    const navMenu = document.getElementById('nav-menu');
-
-    navToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
-    });
-
-    navMenu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('open');
-      });
-    });
-
-    // активный пункт меню по скроллу
-    document.addEventListener('DOMContentLoaded', () => {
-      const sections = document.querySelectorAll('section[id]');
-      const navLinks = navMenu.querySelectorAll('a');
-
-      function setActiveNav() {
-        const scrollPos = window.scrollY + 130;
-        let activeId = '';
-        sections.forEach(sec => {
-          const top = sec.offsetTop;
-          const bottom = top + sec.offsetHeight;
-          if (scrollPos >= top && scrollPos < bottom) activeId = sec.id;
-        });
-        navLinks.forEach(link => {
-          const id = link.getAttribute('href').slice(1);
-          link.classList.toggle('active', id === activeId);
-        });
-      }
-
-      setActiveNav();
-      window.addEventListener('scroll', setActiveNav);
-    });
-
-    // COUNTDOWN
-    const cdDays = document.getElementById('cd-days');
-    const cdHours = document.getElementById('cd-hours');
-    const cdMinutes = document.getElementById('cd-minutes');
-    const cdSeconds = document.getElementById('cd-seconds');
-    const cdNote = document.getElementById('countdown-note');
-
-    const tournamentStart = new Date('2025-12-23T10:00:00');
-
-    function updateCountdown() {
-      const now = new Date();
-      const diff = tournamentStart - now;
-
-      if (diff <= 0) {
-        cdDays.textContent = '00';
-        cdHours.textContent = '00';
-        cdMinutes.textContent = '00';
-        cdSeconds.textContent = '00';
-        cdNote.textContent = 'ТУРНИР УЖЕ НАЧАЛСЯ!';
-        clearInterval(timerId);
-        return;
-      }
-
-      const totalSec = Math.floor(diff / 1000);
-      const days = Math.floor(totalSec / (3600 * 24));
-      const hours = Math.floor((totalSec % (3600 * 24)) / 3600);
-      const minutes = Math.floor((totalSec % 3600) / 60);
-      const seconds = totalSec % 60;
-
-      cdDays.textContent = String(days).padStart(2, '0');
-      cdHours.textContent = String(hours).padStart(2, '0');
-      cdMinutes.textContent = String(minutes).padStart(2, '0');
-      cdSeconds.textContent = String(seconds).padStart(2, '0');
-      cdNote.textContent = '';
+ppeCheckBtn.addEventListener('click', () => {
+  let correct = 0, total = 0, mistakes = 0;
+  ppeItems.forEach(item => {
+    const isCorrect = item.dataset.correct === 'true';
+    const isSelected = item.classList.contains('selected');
+    if (isCorrect) total++;
+    if (isCorrect && isSelected) correct++;
+    if (!isCorrect && isSelected) {
+      item.classList.add('wrong');
+      mistakes++;
     }
+    item.classList.add('locked');
+  });
+  if (correct === total && mistakes === 0) {
+    ppeFeedback.textContent = `✓ Тамаша! Барлық ${total} қажетті құралды дұрыс таңдадыңыз.`;
+    ppeFeedback.className = 'feedback show correct';
+  } else {
+    ppeFeedback.innerHTML = `✗ Дұрыс таңдалды: ${correct}/${total}. Артық таңдалды: ${mistakes}. Қайта көріңіз.`;
+    ppeFeedback.className = 'feedback show incorrect';
+  }
+});
 
-    const timerId = setInterval(updateCountdown, 1000);
-    updateCountdown();
+ppeResetBtn.addEventListener('click', () => {
+  ppeItems.forEach(item => {
+    item.classList.remove('selected', 'wrong', 'locked');
+  });
+  ppeFeedback.className = 'feedback';
+});
 
-    // RULES ACCORDION
-    const accordion = document.getElementById('rules-accordion');
-    accordion.querySelectorAll('.rule-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const item = header.parentElement;
-        const isOpen = item.classList.contains('open');
-        accordion.querySelectorAll('.rule-item').forEach(i => i.classList.remove('open'));
-        if (!isOpen) item.classList.add('open');
-      });
+/* ===== Practice 3: Sequence ===== */
+const correctSequence = [
+  { id: 1, text: 'Жұмыс орнын дайындау және рұқсат алу (наряд)' },
+  { id: 2, text: 'Қондырғыны қоректену көзінен ажырату' },
+  { id: 3, text: 'Кездейсоқ қосылудан қорғау (ілгек, плакат)' },
+  { id: 4, text: 'Кернеудің жоқтығын тексеру' },
+  { id: 5, text: 'Портативті жерге тұйықтағыш орнату' },
+  { id: 6, text: 'Қоршау және ескерту белгілерін орнату' },
+  { id: 7, text: 'Жұмысты орындау' },
+  { id: 8, text: 'Жерге тұйықтағышты алып, қондырғыны қосу' }
+];
+
+const seqTask = document.getElementById('seqTask');
+const seqFeedback = document.getElementById('seqFeedback');
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderSequence() {
+  seqTask.innerHTML = '';
+  const items = shuffle(correctSequence);
+  items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'seq-item';
+    div.draggable = true;
+    div.dataset.id = item.id;
+    div.innerHTML = `
+      <span class="seq-handle">⋮⋮</span>
+      <span class="seq-pos">${idx + 1}</span>
+      <span class="seq-text">${item.text}</span>
+    `;
+    seqTask.appendChild(div);
+  });
+  attachDnD();
+  updatePositions();
+  seqFeedback.className = 'feedback';
+}
+
+function updatePositions() {
+  [...seqTask.children].forEach((el, i) => {
+    el.querySelector('.seq-pos').textContent = i + 1;
+    el.classList.remove('correct', 'incorrect');
+  });
+}
+
+let dragSrc = null;
+function attachDnD() {
+  const items = seqTask.querySelectorAll('.seq-item');
+  items.forEach(el => {
+    el.addEventListener('dragstart', (e) => {
+      dragSrc = el;
+      el.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
     });
-
-    // Отправка формы через Web3Forms
-    const form = document.getElementById('mlbb-form');
-    const statusEl = document.getElementById('form-status');
-
-    form.addEventListener('submit', async (e) => {
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      items.forEach(i => i.classList.remove('drag-over'));
+      updatePositions();
+    });
+    el.addEventListener('dragover', (e) => {
       e.preventDefault();
-
-      statusEl.textContent = 'Отправляем заявку...';
-      statusEl.className = 'form-status visible pending';
-
-      const formData = new FormData(form);
-
-      try {
-        const response = await fetch('https://api.web3forms.com/submit', {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
-        const data = await response.json();
-
-        if (data.success) {
-          statusEl.textContent = 'Заявка отправлена! Мы получили ваши данные.';
-          statusEl.className = 'form-status visible success';
-          form.reset();
-        } else {
-          statusEl.textContent = 'Ошибка при отправке: ' + (data.message || 'попробуйте позже.');
-          statusEl.className = 'form-status visible error';
-        }
-      } catch (err) {
-        statusEl.textContent = 'Ошибка соединения. Проверьте интернет и попробуйте ещё раз.';
-        statusEl.className = 'form-status visible error';
+      if (dragSrc && dragSrc !== el) el.classList.add('drag-over');
+    });
+    el.addEventListener('dragleave', () => el.classList.remove('drag-over'));
+    el.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (dragSrc && dragSrc !== el) seqTask.insertBefore(dragSrc, el);
+      el.classList.remove('drag-over');
+    });
+    el.addEventListener('touchstart', () => {
+      if (dragSrc === el) {
+        dragSrc = null;
+        el.style.background = '';
+      } else if (dragSrc) {
+        seqTask.insertBefore(dragSrc, el);
+        dragSrc.style.background = '';
+        dragSrc = null;
+        updatePositions();
+      } else {
+        dragSrc = el;
+        el.style.background = 'rgba(255,214,10,.1)';
       }
     });
-  </script>
+  });
+}
+
+document.getElementById('seqCheckBtn').addEventListener('click', () => {
+  const items = [...seqTask.children];
+  let correctCount = 0;
+  items.forEach((el, i) => {
+    const id = parseInt(el.dataset.id);
+    if (id === correctSequence[i].id) {
+      el.classList.add('correct');
+      correctCount++;
+    } else {
+      el.classList.add('incorrect');
+    }
+  });
+  if (correctCount === correctSequence.length) {
+    seqFeedback.textContent = '✓ Керемет! Барлық кезеңдер дұрыс ретпен қойылған.';
+    seqFeedback.className = 'feedback show correct';
+  } else {
+    seqFeedback.textContent = `✗ Дұрыс позицияда: ${correctCount}/${correctSequence.length}. Қызыл бөлектелген элементтерді ауыстырып көріңіз.`;
+    seqFeedback.className = 'feedback show incorrect';
+  }
+});
+
+document.getElementById('seqResetBtn').addEventListener('click', renderSequence);
+renderSequence();
+
+/* ===== Practice 4: Match ===== */
+const matchPairs = [
+  { id: 'g1', desc: 'Электротехникалық емес персонал — қарапайым нұсқаулықтан өту' },
+  { id: 'g2', desc: 'Бастаушы персонал — жұмысқа тек бригаданың құрамында, өздігінен емес' },
+  { id: 'g3', desc: '1000 В дейін өздігінен жұмыс істеу құқығы, кемінде 2 ай тәжірибе' },
+  { id: 'g4', desc: '1000 В жоғары жабдыққа жіберілу, бригадиршілік ету мүмкіндігі' },
+  { id: 'g5', desc: 'Кез келген кернеудегі қондырғыларда жұмыс, нарядтар беру құқығы' }
+];
+
+const matchLeft = document.getElementById('matchLeft');
+const matchRight = document.getElementById('matchRight');
+const matchFeedback = document.getElementById('matchFeedback');
+let matchSelected = { left: null, right: null };
+let matchedCount = 0;
+
+function initMatch() {
+  matchRight.innerHTML = '';
+  shuffle(matchPairs).forEach(pair => {
+    const div = document.createElement('div');
+    div.className = 'match-item';
+    div.dataset.id = pair.id;
+    div.textContent = pair.desc;
+    matchRight.appendChild(div);
+  });
+  attachMatch();
+}
+
+function attachMatch() {
+  matchLeft.querySelectorAll('.match-item').forEach(el => {
+    el.addEventListener('click', () => {
+      if (el.classList.contains('matched')) return;
+      matchLeft.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+      matchSelected.left = el;
+      tryMatch();
+    });
+  });
+  matchRight.querySelectorAll('.match-item').forEach(el => {
+    el.addEventListener('click', () => {
+      if (el.classList.contains('matched')) return;
+      matchRight.querySelectorAll('.match-item').forEach(i => i.classList.remove('selected'));
+      el.classList.add('selected');
+      matchSelected.right = el;
+      tryMatch();
+    });
+  });
+}
+
+function tryMatch() {
+  if (matchSelected.left && matchSelected.right) {
+    if (matchSelected.left.dataset.id === matchSelected.right.dataset.id) {
+      matchSelected.left.classList.add('matched');
+      matchSelected.right.classList.add('matched');
+      matchSelected.left.classList.remove('selected');
+      matchSelected.right.classList.remove('selected');
+      matchedCount++;
+      if (matchedCount === matchPairs.length) {
+        matchFeedback.textContent = '✓ Тамаша! Барлық жұптар дұрыс сәйкестендірілген.';
+        matchFeedback.className = 'feedback show correct';
+      }
+    } else {
+      matchSelected.left.classList.add('wrong');
+      matchSelected.right.classList.add('wrong');
+      const l = matchSelected.left, r = matchSelected.right;
+      setTimeout(() => {
+        l.classList.remove('wrong', 'selected');
+        r.classList.remove('wrong', 'selected');
+      }, 600);
+    }
+    matchSelected = { left: null, right: null };
+  }
+}
+
+initMatch();
+
+/* ===== Practice 5: Scenarios ===== */
+const scenarios = [
+  {
+    text: 'Сіз цехта жұмыс істеп жүріп, әріптесіңіз ажыратқыштың тұтқасын ұстап тұрып, есінен танып, тікесінен құлап түсті. Оның бір қолы әлі тұтқада қалған.',
+    q: 'Бірінші не істейсіз?',
+    options: [
+      { t: 'Оны қолымен ұстап тұтқадан тартып аламын', c: false },
+      { t: 'Дереу басты ажыратқышты сөндіремін немесе сақтандырғышты алып тастаймын', c: true },
+      { t: '«Жедел жәрдемге» қоңырау шалып, медицина келгенше күтемін', c: false },
+      { t: 'Әріптеске су құямын — ес кірсе деп', c: false }
+    ],
+    expl: 'Ең алдымен зардап шегушіні токтан ажырату керек. Қолмен ұстау — өзіңізге зиян, ал қоңырау шалу — токтан ажыратудан кейін.'
+  },
+  {
+    text: 'Зертханада жұмыс істеп жүріп, ажыратқыш сөндірілгеннен кейін аспаппен тексеру үшін кернеу көрсеткішті алдыңыз.',
+    q: 'Кернеудің жоқтығын тексеру кезінде дұрыс әрекет?',
+    options: [
+      { t: 'Бірден тексерілетін бөліктерге қолданамын', c: false },
+      { t: 'Алдымен белгілі тірі тоқта аспаптың жұмысын тексеремін, содан кейін зерттелетін бөлікте, содан соң тағы тірі тоқта', c: true },
+      { t: 'Көзбен қарап шешемін — егер шамдар сөнсе, тоқ жоқ деп санаймын', c: false },
+      { t: 'Қолмен ұстап температура бойынша анықтаймын', c: false }
+    ],
+    expl: 'Аспапты жұмысқа дейін және жұмыстан кейін белгілі тірі тоқта тексеру міндетті — аспап жарамсыз болса жалған «тоқ жоқ» нәтижесі болуы мүмкін.'
+  },
+  {
+    text: 'Сіз ылғалды подвалда (сынып III) электр сорғышын тексеруіңіз керек. Жабдықтың қуат қорегі — 220 В.',
+    q: 'Бұл жағдайда қалай әрекет етесіз?',
+    options: [
+      { t: 'Резеңке қолғап киіп, жұмысты бастаймын', c: false },
+      { t: 'Бұл үй-жайда 220 В жабдықпен жұмыс істеуге тыйым салынған, жабдықты 12 В немесе арнайы қорғалған нұсқаға ауыстыру керек', c: true },
+      { t: 'Еденге құрғақ ағаш тақта төсеп, жұмысты бастаймын', c: false },
+      { t: 'Жұмысты тез орындап шығып кетемін', c: false }
+    ],
+    expl: 'III сыныптағы үй-жайларда 220 В жабдықты қолдану — қауіпсіздік ережелерін бұзу. Тек 12 В немесе арнайы қорғалған жабдық рұқсат етіледі.'
+  },
+  {
+    text: 'Әріптесіңіз электр тоғымен зақымданды, оны токтан ажыраттыңыз. Ол есі жоғалған, тыныс алмайды, тамырсоғу сезілмейді.',
+    q: 'Сіздің әрекеттеріңіз?',
+    options: [
+      { t: 'Дәрігер келгенше күтемін, өзім ештеңе істемеймін — мүмкін зиян тигіземін', c: false },
+      { t: 'Зардап шегушіні шайқап оятуға тырысамын', c: false },
+      { t: '103-ке қоңырау шалып, дереу жабық жүрек массажы мен жасанды тыныс беруді бастаймын (30:2)', c: true },
+      { t: 'Зардап шегушіні жерге көмемін', c: false }
+    ],
+    expl: 'Тыныс пен тамырсоғу болмаса — дереу реанимация бастау керек. Әр секунд маңызды. Жерге көму — өте қауіпті аңыз, ешқашан жасамаңыз.'
+  }
+];
+
+const scenarioContainer = document.getElementById('scenarioContainer');
+scenarios.forEach((s, idx) => {
+  const div = document.createElement('div');
+  div.className = 'scenario';
+  div.innerHTML = `
+    <div style="font-family:'JetBrains Mono',monospace;color:var(--hazard);font-size:11px;letter-spacing:1.5px;margin-bottom:8px;">// СЦЕНАРИЙ ${String(idx + 1).padStart(2, '0')}</div>
+    <div>${s.text}</div>
+    <div class="scenario-q">${s.q}</div>
+    <div class="scenario-options">
+      ${s.options.map((o, i) => `<div class="scenario-opt" data-correct="${o.c}" data-idx="${i}">${o.t}</div>`).join('')}
+    </div>
+    <div class="feedback" id="scenFeedback${idx}"></div>
+  `;
+  scenarioContainer.appendChild(div);
+});
+
+document.querySelectorAll('.scenario-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const parent = opt.closest('.scenario');
+    if (parent.dataset.answered === 'true') return;
+    parent.dataset.answered = 'true';
+    parent.querySelectorAll('.scenario-opt').forEach(o => {
+      o.classList.add('locked');
+      if (o.dataset.correct === 'true') o.classList.add('correct');
+      else if (o === opt) o.classList.add('incorrect');
+    });
+    const feedbackId = parent.querySelector('.feedback').id;
+    const fb = document.getElementById(feedbackId);
+    const idx = [...scenarioContainer.children].indexOf(parent);
+    if (opt.dataset.correct === 'true') {
+      fb.innerHTML = `✓ Дұрыс! ${scenarios[idx].expl}`;
+      fb.className = 'feedback show correct';
+    } else {
+      fb.innerHTML = `✗ Қате жауап. ${scenarios[idx].expl}`;
+      fb.className = 'feedback show incorrect';
+    }
+  });
+});
+
+/* ===== TEST ===== */
+const questions = [
+  {
+    q: 'Адам үшін айнымалы токтың (50 Гц) "жібермейтін" шегі қандай мәннен басталады?',
+    options: ['1 мА', '5 мА', '10–15 мА', '100 мА'],
+    correct: 2,
+    expl: '10–15 мА токта бұлшықет талмасы соншалықты күшті, адам тоғы бар сымды өз бетімен жібере алмайды.'
+  },
+  {
+    q: 'Құрғақ үй-жайдағы адам үшін қауіпсіз кернеу қандай?',
+    options: ['12 В', '42 В', '127 В', '220 В'],
+    correct: 1,
+    expl: 'Құрғақ үй-жайларда 42 В дейінгі кернеу қауіпсіз болып саналады. Ылғалды ортада бұл шек 12 В дейін төмендейді.'
+  },
+  {
+    q: 'Электр қондырғысында жұмыс басталар алдында қандай әрекет міндетті түрде орындалады?',
+    options: [
+      'Жұмыс орнын тазалау',
+      'Жабдықты қоректен ажырату және кернеудің жоқтығын тексеру',
+      'Жабдықтың түсін тексеру',
+      'Жабдыққа жаңа сым қосу'
+    ],
+    correct: 1,
+    expl: 'Жұмысқа кіріспес бұрын жабдықты желіден ажырату және барлық фазаларда кернеудің жоқтығын тексеру міндетті.'
+  },
+  {
+    q: 'Жерге қосу не үшін қажет?',
+    options: [
+      'Жабдықтың қуатын арттыру үшін',
+      'Шығынды азайту үшін',
+      'Зақымдану кезінде токты жерге бұрып, адамды қорғау үшін',
+      'Жабдықты әсемдеу үшін'
+    ],
+    correct: 2,
+    expl: 'Жерге қосу зақымдану кезінде корпуста пайда болған токты жерге бұрып, адамды электр соққысынан қорғайды.'
+  },
+  {
+    q: 'Жоғары кернеулі қондырғыда қанша адам жұмыс істеуі тиіс?',
+    options: ['Бір адам', 'Кемінде екі адам', 'Қанша болса да', 'Бұл маңызды емес'],
+    correct: 1,
+    expl: 'Электр қондырғыларында жұмыс кемінде екі адаммен жүргізіледі — апаттық жағдайда бірі екіншісіне көмек көрсете алуы үшін.'
+  },
+  {
+    q: '1000 В дейінгі қондырғыларда қандай ҚҚК НЕГІЗГІ деп саналады?',
+    options: ['Диэлектрлік төсеніш', 'Диэлектрлік қолғап', 'Қорғаныс көзілдірігі', 'Қорғаныс касқасы'],
+    correct: 1,
+    expl: '1000 В дейінгі қондырғыларда диэлектрлік қолғап негізгі қорғаныс құралы болып табылады, қалғаны — қосымша.'
+  },
+  {
+    q: 'Электр тоғымен зақымданған адамды құтқаруда ең бірінші не істеу керек?',
+    options: [
+      'Дереу дәрігерге қоңырау шалу',
+      'Жасанды тыныс беру',
+      'Зардап шегушіні тоқ көзінен ажырату',
+      'Зардап шегушіге су құю'
+    ],
+    correct: 2,
+    expl: 'Ең әуелі зардап шегушіні токтан ажырату керек: ажыратқышты сөндіру немесе оны изоляциялы зат арқылы тоқтан шығару.'
+  },
+  {
+    q: 'Қандай белгі "Қосуға тыйым салынады — адамдар жұмыс істеп жатыр" дегенді білдіреді?',
+    options: ['Тыйым салушы', 'Сақтандырушы', 'Нұсқаушы', 'Ескертуші'],
+    correct: 0,
+    expl: 'Бұл белгі тыйым салушы плакаттарға жатады және ажыратқыштарда жұмыс кезінде ілінеді.'
+  },
+  {
+    q: 'Ылғалды үй-жайда қандай кернеудегі жабдықты қолдануға рұқсат?',
+    options: ['380 В', '220 В', '42 В', '12 В дейін'],
+    correct: 3,
+    expl: 'Жоғары ылғалдылық пен өткізгіш едені бар үй-жайларда тек 12 В дейінгі төмен кернеулі жабдықты пайдалануға болады.'
+  },
+  {
+    q: 'Қысқа тұйықталу деген не?',
+    options: [
+      'Сым ұзындығының қысқаруы',
+      'Тізбек кедергісінің күрт төмендеуі арқылы пайда болатын авариялық режим',
+      'Жабдықтың сөнуі',
+      'Кернеудің жоғарылауы'
+    ],
+    correct: 1,
+    expl: 'Қысқа тұйықталу — тізбек кедергісі күрт төмендеп, ток күрт өсетін авариялық режим. Қызу мен өртке әкелуі мүмкін.'
+  },
+  {
+    q: 'Электр қауіпсіздігі бойынша қанша топ бар?',
+    options: ['3', '4', '5', '6'],
+    correct: 2,
+    expl: 'I, II, III, IV және V — барлығы 5 топ. Әр топ нақты білім деңгейі мен жұмыс құқығын анықтайды.'
+  },
+  {
+    q: 'IV электр қауіпсіздігі тобына қандай құқық беріледі?',
+    options: [
+      'Қарапайым электр құралын пайдалану',
+      '1000 В дейін бригаданың құрамында жұмыс істеу',
+      '1000 В жоғары жабдыққа жіберілу, бригадиршілік ету',
+      'Тек кеңсе жұмыстары'
+    ],
+    correct: 2,
+    expl: 'IV топ — 1000 В жоғары қондырғыларда жұмыс істеу, жұмысты өндіруші болу құқығын береді.'
+  },
+  {
+    q: 'Жоғары қауіптілік үй-жайының белгілері?',
+    options: [
+      'Ылғалдық 75% дейін, температура 20°C',
+      'Ылғалдық 75% жоғары немесе өткізгіш еден',
+      '100% ылғалдық',
+      'Тек көше'
+    ],
+    correct: 1,
+    expl: 'II сынып (жоғары қауіптілік) — 75% жоғары ылғалдық, өткізгіш еден, өткізгіш шаң немесе +30°C жоғары температура шарттарының бірі.'
+  },
+  {
+    q: 'Реанимация кезінде жүрек қысу мен ауа берудің ритмі?',
+    options: ['10:1', '15:2', '30:2', '50:5'],
+    correct: 2,
+    expl: '30 қысу — 2 ауа беру (30:2) ересектерге арналған стандартты реанимация ритмі. Қысу жиілігі — 100-120 рет/мин.'
+  },
+  {
+    q: 'Қазақстанда жедел жәрдемнің телефон нөмірі?',
+    options: ['101', '102', '103', '104'],
+    correct: 2,
+    expl: '103 — жедел медициналық жәрдем. 101 — өрт, 102 — полиция, 112 — бірыңғай шұғыл нөмір.'
+  },
+  {
+    q: 'Электр доғасының температурасы шамамен қандай?',
+    options: ['100°C', '500°C', '1000°C', '4000°C дейін'],
+    correct: 3,
+    expl: 'Электр доғасы 4000°C-қа дейін қызуы мүмкін, сондықтан ауыр күйіктер мен металдың балқуын тудырады.'
+  },
+  {
+    q: 'Қадам кернеуінен қалай қорғану керек?',
+    options: [
+      'Қашып шығу',
+      'Бір аяқпен секіру немесе кіші қадамдармен (аяқтарды біріктіріп) шығу',
+      'Жерге жату',
+      'Орнында тұру'
+    ],
+    correct: 1,
+    expl: 'Қадам кернеуінен бір аяқпен секіру немесе аяқтарды біріктіріп кіші қадамдармен (≤ 30 см) шығу керек. Қашу — өте қауіпті.'
+  },
+  {
+    q: 'Тоқтың адам арқылы өту жолдарының қайсысы ең қауіпті?',
+    options: ['Аяқ — аяқ', 'Қол — аяқ', 'Қол — қол', 'Бас — қол'],
+    correct: 3,
+    expl: '«Бас — қол» жолы ми мен жүректен өтеді — өте қауіпті. «Қол — қол» және «қол — аяқ» жолдары да жүрек арқылы өтеді.'
+  },
+  {
+    q: 'Тұрақты ток (DC) айнымалы тоққа (AC) қарағанда:',
+    options: [
+      'Әлдеқайда қауіпті',
+      'Бірдей деңгейде қауіпті',
+      'Кейбір жағдайларда аз қауіпті',
+      'Мүлдем қауіпсіз'
+    ],
+    correct: 2,
+    expl: 'Тұрақты ток айнымалы тоққа қарағанда 4-5 есе аз қауіпті бірдей кернеуде, бірақ ұзақ ұсталу қаупі бар.'
+  },
+  {
+    q: 'Кернеу көрсеткіш аспабын қалай тексеру керек?',
+    options: [
+      'Қолмен ұстап',
+      'Тек жұмыстан кейін',
+      'Алдымен белгілі тірі тоқта, содан кейін зерттелетін бөлікте, содан соң тағы тірі тоқта',
+      'Тексеру қажет емес'
+    ],
+    correct: 2,
+    expl: 'Аспапты үш кезеңде тексеру керек: жұмысқа дейін тірі тоқта → зерттелетін бөлікте → жұмыстан кейін тірі тоқта. Бұл аспаптың жарамдылығын растайды.'
+  },
+  {
+    q: 'Электр күйігіне ҚАТАҢ ТЫЙЫМ САЛЫНҒАН әрекет?',
+    options: [
+      'Суық сумен шаю',
+      'Стерильді таңғышпен жабу',
+      'Май, крем жағу немесе көпіршікті жару',
+      'Дәрігерге жеткізу'
+    ],
+    correct: 2,
+    expl: 'Күйікке май, крем, тіс пастасы жағуға, көпіршіктерді жаруға қатаң тыйым. Тек суық сумен шайып, стерильді таңғышпен жабу керек.'
+  },
+  {
+    q: 'Сақтандырушы белгінің формасы мен түсі?',
+    options: [
+      'Дөңгелек, қызыл',
+      'Үшбұрыш, сары',
+      'Шаршы, көк',
+      'Тікбұрыш, жасыл'
+    ],
+    correct: 1,
+    expl: 'Сақтандырушы белгілер — сары үшбұрыш фондағы қара кескіндер. Қауіпті аймақтарды белгілейді.'
+  },
+  {
+    q: '110 кВ ЭБЖ-нан минималды қашықтық қандай?',
+    options: ['0,6 м', '1 м', '2 м', '3,5 м'],
+    correct: 1,
+    expl: '110 кВ кернеулі қондырғыдан кемінде 1 м қашықтықта тұру керек. 220 кВ — 2 м, 500 кВ — 3,5 м.'
+  },
+  {
+    q: 'Наряд-рұқсаттың максималды жарамдылық мерзімі?',
+    options: ['1 күн', '5 күн', '15 күн', '30 күн'],
+    correct: 1,
+    expl: 'Наряд-рұқсат жарамдылық мерзімі — 5 күннен аспауы тиіс. Қажет болса жаңа наряд жасалады.'
+  },
+  {
+    q: 'Электр зақымдануынан кейін «алтын минут» қанша уақыт?',
+    options: ['1 минут', '4-5 минут', '10 минут', '30 минут'],
+    correct: 1,
+    expl: '«Алтын минут» — жүрек тоқтағаннан кейінгі алғашқы 4-5 минут. Осы уақыт ішінде реанимация басталмаса, ми жасушалары жойыла бастайды.'
+  }
+];
+
+let currentQ = 0;
+let answers = [];
+const testBody = document.getElementById('testBody');
+
+function renderQuestion() {
+  if (currentQ >= questions.length) {
+    renderResult();
+    return;
+  }
+  const q = questions[currentQ];
+  const pct = (currentQ / questions.length) * 100;
+  testBody.innerHTML = `
+    <div class="test-header">
+      <div class="test-counter">САУАЛ <span>${currentQ + 1}</span> / ${questions.length}</div>
+      <div class="test-progress"><div class="test-progress-fill" style="width:${pct}%"></div></div>
+      <div class="test-counter">ДҰРЫС: <span>${answers.filter(a => a.correct).length}</span></div>
+    </div>
+    <div class="question-num">// ${String(currentQ + 1).padStart(2, '0')}</div>
+    <div class="question">${q.q}</div>
+    <div class="options" id="optionsList">
+      ${q.options.map((o, i) => `
+        <div class="option" data-i="${i}">
+          <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+          <div>${o}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="test-explanation" id="testExpl">
+      <strong>Түсіндірме:</strong> ${q.expl}
+    </div>
+    <div class="test-actions">
+      <button class="btn" id="confirmBtn" disabled>Жауапты растау</button>
+      <button class="btn secondary" id="nextBtn" style="display:none;">${currentQ === questions.length - 1 ? 'Нәтижені көру' : 'Келесі сұрақ'} →</button>
+    </div>
+  `;
+
+  let selected = null;
+  const opts = testBody.querySelectorAll('.option');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const expl = document.getElementById('testExpl');
+
+  opts.forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (opt.classList.contains('disabled')) return;
+      opts.forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      selected = parseInt(opt.dataset.i);
+      confirmBtn.disabled = false;
+    });
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    if (selected === null) return;
+    const correct = q.correct;
+    opts.forEach(opt => {
+      const i = parseInt(opt.dataset.i);
+      opt.classList.add('disabled');
+      opt.classList.remove('selected');
+      if (i === correct) opt.classList.add('correct');
+      else if (i === selected) opt.classList.add('incorrect');
+    });
+    answers[currentQ] = { answered: selected, correct: selected === correct };
+    expl.classList.add('show');
+    confirmBtn.style.display = 'none';
+    nextBtn.style.display = 'inline-flex';
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentQ++;
+    renderQuestion();
+    document.getElementById('test').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+function renderResult() {
+  const correct = answers.filter(a => a.correct).length;
+  const total = questions.length;
+  const pct = Math.round(correct / total * 100);
+  let cls = 'low', msg = '', title = '', grade = '';
+  if (pct >= 90) { cls = 'high'; title = 'Үздік!'; grade = 'A'; msg = 'Сіз қауіпсіздік ережелерін өте жақсы меңгергенсіз. Алған біліміңізді практикада сенімді қолдана аласыз!'; }
+  else if (pct >= 75) { cls = 'high'; title = 'Жақсы!'; grade = 'B'; msg = 'Жоғары деңгей. Кейбір нюанстарды қайталау пайдалы болуы мүмкін.'; }
+  else if (pct >= 60) { cls = 'mid'; title = 'Қанағаттанарлық'; grade = 'C'; msg = 'Негізгі ұғымдарды білесіз, бірақ көп тұстарды қайталау керек. Теорияны қайта оқыңыз.'; }
+  else if (pct >= 40) { cls = 'mid'; title = 'Күшейту керек'; grade = 'D'; msg = 'Білім деңгейі жеткіліксіз. Барлық модульдерді қайтадан өткізіп, тестті қайталаңыз.'; }
+  else { cls = 'low'; title = 'Қайта оқу қажет'; grade = 'F'; msg = 'Қауіпсіздік — өмір мен өлім мәселесі. Барлық сабақты толық қайта оқып, тестті қайтадан өткізіңіз.'; }
+
+  testBody.innerHTML = `
+    <div class="result-screen">
+      <div class="module-num">// ТЕСТ АЯҚТАЛДЫ</div>
+      <h3 style="font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:1px;margin-top:10px;">${title}</h3>
+      <div class="result-score ${cls}">${pct}%</div>
+      <div class="result-message">${msg}</div>
+      <div class="result-stats">
+        <div class="result-stat"><div class="v">${correct}</div><div class="l">Дұрыс</div></div>
+        <div class="result-stat"><div class="v">${total - correct}</div><div class="l">Қате</div></div>
+        <div class="result-stat"><div class="v">${total}</div><div class="l">Барлығы</div></div>
+        <div class="result-stat"><div class="v">${grade}</div><div class="l">Баға</div></div>
+      </div>
+      <button class="btn" id="restartBtn">↻ Қайта бастау</button>
+    </div>
+  `;
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    currentQ = 0;
+    answers = [];
+    renderQuestion();
+    document.getElementById('test').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+renderQuestion();
+</script>
+
 </body>
 </html>
-
-
-
-
